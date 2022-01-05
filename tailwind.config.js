@@ -12,19 +12,18 @@ module.exports = {
 			screens: {
 				xs: { max: "425px" },
 				sm: { max: "768px" },
-				'max-lg': { max: "1024px" }
+				"max-lg": { max: "1024px" },
 			},
 			animation: {
 				"animate-alt-spin": "spin 1s linear infinite reverse",
 				"spin-slow": "spin 3s linear infinite",
 			},
 			height: {
-				'154': '38rem',
-			}
+				154: "38rem",
+			},
 		},
 		fontFamily: {
-			sora: ["'Sora'"],
-			urbanist: ["'Urbanist'"],
+			inter: ["Inter"],
 		},
 		colors: {
 			transparent: "transparent",
@@ -37,13 +36,11 @@ module.exports = {
 			yellow: colors.amber,
 			blue: colors.blue,
 			green: colors.green,
-			pizza: "#FF8906",
-			cryptoblue: "#4065F6",
-			faintblue: "#F2F5FF",
-			twitterblue: "#1DA1F2",
-			cryptopurple: "#9366F9",
-			lightpurple: "#F6F2FF",
-			footerblack: "#16161A",
+			primaryBackground: "#2C2C35",
+			secondaryBackground: "#1e1e24",
+			primaryText: "#ffffff",
+			secondaryText: "#A9A9B7",
+			messageHover: "#40404a",
 			"heading-color": "var(--heading-color)",
 		},
 	},

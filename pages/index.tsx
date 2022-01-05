@@ -1,14 +1,22 @@
 import React from "react";
-import Members from "../components/Members";
+import EmailComponent from "../components/EmailComponent";
+import SearchBar from "../components/SearchBard";
 
 declare let window: any;
 
 const Dashboard: React.FC = () => {
 	return (
-		<div className="min-h-screen">
-			<div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 flex h-full space-x-4 items-center font-urbanist py-12">
-				<Members />
-			</div>
+		<div className="space-y-4">
+			<SearchBar />
+			<div className="text-primaryText">Today</div>
+			<EmailComponent />
+			<div className="text-primaryText">Yesterday</div>
+			<EmailComponent />
+			<EmailComponent />
+			<EmailComponent />
+			<EmailComponent />
+			<div className="text-primaryText">21 Dec, 2021</div>
+			<EmailComponent />
 		</div>
 	);
 };

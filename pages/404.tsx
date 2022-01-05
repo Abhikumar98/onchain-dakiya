@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import illustration from "../assets/errorillustration.svg";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import toast from "react-hot-toast";
 import { validateAndResolveAddress } from "../utils/crypto";
 import { ethers } from "ethers";
+import { toast } from "react-toastify";
 
 declare let window: any;
 
