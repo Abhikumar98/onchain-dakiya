@@ -4,7 +4,7 @@ import { Send } from "../Icons";
 
 const ReplyBar = () => {
 	return (
-		<div className="mt-1 shadow-sm flex items-start space-x-4 bg-secondaryBackground">
+		<div className=" sticky -bottom-4 -mb-4 py-4 shadow-sm flex items-start space-x-4 bg-secondaryBackground">
 			<textarea
 				rows={1}
 				name="reply"

@@ -1,12 +1,12 @@
 import React from "react";
 import EmailComponent from "../components/EmailComponent";
-import SearchBar from "../components/SearchBard";
+import SearchBar from "../components/SearchBar";
 
 declare let window: any;
 
 const Dashboard: React.FC = () => {
 	return (
-		<div className="space-y-4">
+		<div className="space-y-4 relative">
 			<SearchBar />
 			<div className="text-primaryText">Today</div>
 			<EmailComponent />

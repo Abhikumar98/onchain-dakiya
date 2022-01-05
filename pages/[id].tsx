@@ -23,8 +23,13 @@ const Profile: React.FC<ProfileProps> = ({
 }) => {
 	return (
 		<>
-			<div>
+			<div className="relative">
 				<SubjectHeader />
+				<ThreadMessage />
+				<ThreadMessage />
+				<ThreadMessage />
+				<ThreadMessage />
+				<ThreadMessage />
 				<ThreadMessage />
 				<ThreadMessage />
 				<ThreadMessage />

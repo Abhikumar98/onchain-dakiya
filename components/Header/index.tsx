@@ -23,7 +23,7 @@ const Header = () => {
 						<div className="flex-shrink-0 flex items-center">
 							<Link href="/">
 								<div className="flex items-center">
-									<Logo /> Dakiya
+									<Logo />
 								</div>
 							</Link>
 						</div>
