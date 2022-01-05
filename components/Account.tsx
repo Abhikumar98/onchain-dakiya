@@ -84,7 +84,9 @@ function Account() {
 							<img src={avatar} className="h-6 w-6 rounded-lg" />
 						)}
 						{!avatar && <Blockie currentWallet scale={3} />}
-						<p>{ensAddress || getEllipsisTxt(account, 6)}</p>
+						<p className="hidden md:block">
+							{ensAddress || getEllipsisTxt(account, 6)}
+						</p>
 						<ChevronDownIcon
 							className="-mr-1 ml-2 h-5 w-5"
 							aria-hidden="true"

@@ -17,7 +17,7 @@ const Header = () => {
 
 	return (
 		<header className="bg-primaryBackground drop-shadow-md">
-			<div className="mx-auto px-40">
+			<div className="mx-auto px-4 lg:px-40">
 				<div className="flex items-center justify-between py-5">
 					<div className="flex lg:px-0">
 						<div className="flex-shrink-0 flex items-center">

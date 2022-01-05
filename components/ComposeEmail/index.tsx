@@ -5,6 +5,7 @@ import { CheckIcon } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import Button from "../Button";
 import { Send } from "../Icons";
+import { toast } from "react-toastify";
 
 interface IComposeEmail {
 	readonly open: boolean;
@@ -12,6 +13,13 @@ interface IComposeEmail {
 }
 
 const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
+	const handleSendEmail = async () => {
+		onClose();
+		toast.success("Email sent successfully!", {
+			position: "bottom-left",
+		});
+	};
+
 	return (
 		<Transition.Root show={open} as={Fragment}>
 			<Dialog
@@ -19,7 +27,7 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 				className="fixed z-10 inset-0 overflow-y-auto"
 				onClose={onClose}
 			>
-				<div className="flex items-end justify-end min-h-screen pt-4 px-4 pb-4 text-center sm:block sm:p-0">
+				<div className="flex items-end justify-end min-h-screen pt-4 px-4 pb-4 text-center">
 					<Transition.Child
 						as={Fragment}
 						enter="ease-out duration-300"
@@ -33,10 +41,7 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 					</Transition.Child>
 
 					{/* This element is to trick the browser into centering the modal contents. */}
-					<span
-						className="hidden sm:inline-block sm:align-middle sm:h-screen"
-						aria-hidden="true"
-					>
+					<span className="hidden sm:h-screen" aria-hidden="true">
 						&#8203;
 					</span>
 					<Transition.Child
@@ -48,7 +53,7 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 						leaveFrom="opacity-100 translate-y-0 sm:scale-100"
 						leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
 					>
-						<div className="modal-dimensions w-2/5 inline-block align-bottom bg-primaryBackground rounded-lg p-6 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
+						<div className="modal-dimensions w-full md:w-3/5 lg:w-1/2 xl:w-2/5 inline-block bg-primaryBackground rounded-lg p-6 text-left overflow-hidden shadow-xl transform transition-all">
 							<div className="mb-4 sm:mt-5">
 								<Dialog.Title
 									as="h3"
@@ -95,6 +100,7 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 									fullWidth
 									className="justify-center"
 									icon={<Send />}
+									onClick={handleSendEmail}
 								>
 									Send Dak
 								</Button>

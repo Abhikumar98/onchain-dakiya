@@ -17,7 +17,7 @@ div.embed-modal .ant-modal-header {
 	overflow: auto;
 	padding: 1rem 10rem;
 	margin-bottom: 1rem;
-	@apply bg-secondaryBackground;
+	@apply bg-secondaryBackground px-4 lg:px-40;
 }
 
 .modal-dimensions {
