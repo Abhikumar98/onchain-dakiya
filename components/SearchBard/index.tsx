@@ -14,7 +14,7 @@ const SearchBar = () => {
 				type="text"
 				name="text"
 				id="text"
-				className="block w-full pl-10 sm:text-sm border-transparent rounded-md bg-primaryBackground"
+				className="block w-full pl-10 sm:text-sm text-primaryText border-transparent rounded-md bg-primaryBackground"
 				placeholder="Search your emails"
 			/>
 		</div>
