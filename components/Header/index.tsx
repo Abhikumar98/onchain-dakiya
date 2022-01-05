@@ -1,15 +1,25 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import Account from "../Account";
 import Button from "../Button";
+import ComposeEmail from "../ComposeEmail";
 import { Logo, Send } from "../Icons";
 
 const Header = () => {
+	const [open, setOpen] = React.useState(false);
+
+	const router = useRouter();
+
+	const showComposeEmailSection = () => {
+		setOpen(true);
+	};
+
 	return (
 		<header className="bg-primaryBackground drop-shadow-md">
-			<div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+			<div className="mx-auto px-40">
 				<div className="flex items-center justify-between py-5">
-					<div className="flex px-2 lg:px-0">
+					<div className="flex lg:px-0">
 						<div className="flex-shrink-0 flex items-center">
 							<Link href="/">
 								<div className="flex items-center">
@@ -19,11 +29,17 @@ const Header = () => {
 						</div>
 					</div>
 					<div className="flex space-x-6 items-center">
-						<Button icon={<Send />}>Send Dak</Button>
+						<Button
+							onClick={showComposeEmailSection}
+							icon={<Send />}
+						>
+							Send Dak
+						</Button>
 						<Account />
 					</div>
 				</div>
 			</div>
+			<ComposeEmail open={open} onClose={() => setOpen(false)} />
 		</header>
 	);
 };

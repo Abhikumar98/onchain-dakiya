@@ -19,3 +19,6 @@ div.embed-modal .ant-modal-header {
 	margin-bottom: 1rem;
 	@apply bg-secondaryBackground;
 }
+
+.modal-dimensions {
+}

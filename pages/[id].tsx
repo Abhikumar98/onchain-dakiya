@@ -1,4 +1,5 @@
 import React from "react";
+import ReplyBar from "../components/ReplyBar";
 import SubjectHeader from "../components/SubjectHeader";
 import ThreadMessage from "../components/ThreadMessage";
 import { Group, Transaction } from "../contracts";
@@ -29,6 +30,7 @@ const Profile: React.FC<ProfileProps> = ({
 				<ThreadMessage />
 				<ThreadMessage />
 				<ThreadMessage />
+				<ReplyBar />
 			</div>
 		</>
 	);
