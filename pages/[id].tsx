@@ -1,26 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReplyBar from "../components/ReplyBar";
 import SubjectHeader from "../components/SubjectHeader";
 import ThreadMessage from "../components/ThreadMessage";
-import { Group, Transaction } from "../contracts";
+import { useMoralisData } from "../hooks/useMoralisData";
+import { getPublicEncryptionKey } from "../utils/crypto";
 
 declare let window: any;
 
 export interface ProfileProps {
-	transactions: Transaction[];
 	profileAddress: string;
 	ens?: string;
 	avatar?: string;
-	group?: Group;
 }
 
-const Profile: React.FC<ProfileProps> = ({
-	transactions: allTransactions,
-	profileAddress,
-	ens,
-	avatar: defaultAvatar,
-	group,
-}) => {
+const Profile: React.FC<ProfileProps> = ({}) => {
 	return (
 		<>
 			<div className="relative">

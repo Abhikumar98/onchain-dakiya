@@ -11,6 +11,7 @@
 		"@metamask/eth-sig-util": "^4.0.0",
 		"@next-auth/firebase-adapter": "0.0.2-canary.207",
 		"@tailwindcss/forms": "^0.3.4",
+		"@types/eth-sig-util": "^2.1.1",
 		"@types/qrcode": "^1.4.1",
 		"@types/react-blockies": "^1.4.1",
 		"@walletconnect/web3-provider": "^1.6.6",

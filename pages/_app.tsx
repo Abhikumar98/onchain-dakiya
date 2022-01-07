@@ -1,7 +1,7 @@
 import "antd/dist/antd.css";
 import Head from "next/head";
 import NextNProgress from "nextjs-progressbar";
-import React from "react";
+import React, { useEffect } from "react";
 import { MoralisProvider } from "react-moralis";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,7 +10,7 @@ import "tailwindcss/tailwind.css";
 import Header from "../components/Header";
 import MetaHead from "../components/MetaHead";
 import "./globals.css";
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { contract } from "../utils/crypto";
 
 const APP_ID = process.env.NEXT_PUBLIC_MORALIS_APPLICATION_ID;
 const SERVER_URL = process.env.NEXT_PUBLIC_MORALIS_SERVER_URL;
@@ -20,6 +20,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 	// 	uri: "https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
 	// 	cache: new InMemoryCache(),
 	// });
+
+	useEffect(() => {
+		
+	}, []);
 
 	return (
 		<MoralisProvider appId={APP_ID} serverUrl={SERVER_URL}>

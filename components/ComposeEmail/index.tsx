@@ -1,13 +1,12 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { FC, Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/outline";
-import { useRouter } from "next/router";
+import { FC, Fragment, useRef, useState } from "react";
+import { toast } from "react-toastify";
+import { useMoralisData } from "../../hooks/useMoralisData";
+import { listenEvents } from "../../utils/crypto";
+import { saveMessageOnIPFS } from "../../utils/queries";
 import Button from "../Button";
 import { Send } from "../Icons";
-import { toast } from "react-toastify";
-import { saveMessageOnIPFS } from "../../utils/queries";
-import { useMoralisData } from "../../hooks/useMoralisData";
 
 interface IComposeEmail {
 	readonly open: boolean;
@@ -16,6 +15,7 @@ interface IComposeEmail {
 
 const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 	const { account } = useMoralisData();
+	const toastId = useRef(null);
 
 	const [to, setTo] = useState("");
 	const [subject, setSubject] = useState("");
@@ -25,13 +25,26 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 		try {
 			await saveMessageOnIPFS(account, to, subject, body);
 			onClose();
-			toast.success("Email sent successfully!", {
+			toastId.current = toast.loading("Sending message", {
 				position: "bottom-left",
+			});
+			listenEvents().on("MessageSent", (...params) => {
+				console.log("coming here ---> ", params, toastId.current);
+				toast.update(toastId.current, {
+					type: toast.TYPE.SUCCESS,
+					render: "Email sent successfully",
+					autoClose: 5000,
+					isLoading: false,
+				});
 			});
 		} catch (error) {
 			console.error(error);
 		}
 	};
+
+	toast.update("e4jstyb3t", {
+		type: "success",
+	});
 
 	return (
 		<Transition.Root show={open} as={Fragment}>
