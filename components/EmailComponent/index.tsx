@@ -31,18 +31,18 @@ const EmailComponent = ({ email }: { email: Email }) => {
 				)}
 			</div>
 			<div className="">
-				<div className="title space-x-4 flex items-center">
-					<div className=" text-primaryText text-xl font-semibold">
+				<div className="flex flex-col  md:flex-row md:space-x-4 md:items-center">
+					<div className=" text-primaryText text-base sm:text-lg md:text-xl font-semibold">
 						{name ?? minimizeAddress(address ?? email.sender)}
 					</div>
-					<div className=" text-secondaryText">
+					<div className="text-xs sm:text-sm md:text-base text-secondaryText">
 						{human(moment(email.timestamp).toDate())}
 					</div>
 				</div>
-				<div className=" text-primaryText font-semibold text-lg mt-3">
+				<div className=" text-primaryText font-semibold text-sm sm:text-base md:text-lg mt-3">
 					Hey bro whats up with the BYAC NFT?
 				</div>
-				<div className=" text-secondaryText text-base mt-1">
+				<div className=" text-secondaryText text-xs sm:text-sm md:text-base mt-1">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 					Volutpat odio habitant in tempor tortor massa. Mattis varius
 					quam sodales sit et at nibh arcu.
