@@ -19,7 +19,7 @@ function Blockie(props) {
 			seed={
 				props.currentWallet
 					? account.toLowerCase()
-					: props.address.toLowerCase()
+					: props.address?.toLowerCase()
 			}
 			className="rounded-lg"
 			{...props}

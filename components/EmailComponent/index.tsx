@@ -1,9 +1,15 @@
-import React from "react";
-import Image from "next/image";
-import sample from "../../assets/cryptocoffee.png";
 import { useRouter } from "next/router";
-const EmailComponent = () => {
+import React from "react";
+import { Email } from "../../contracts";
+import { useEnsAddress } from "../../utils/useEnsAddress";
+import Blockie from "../Blockie";
+import human from "human-time";
+import moment from "moment";
+import { minimizeAddress } from "../../utils";
+
+const EmailComponent = ({ email }: { email: Email }) => {
 	const router = useRouter();
+	const { name, address, avatar } = useEnsAddress(email.sender);
 
 	const handleRoute = () => {
 		router.push("/123");
@@ -15,14 +21,23 @@ const EmailComponent = () => {
 			className="p-4 rounded-r-md bg-primaryBackground hover:bg-messageHover cursor-pointer transition-all ease-in-out my-4 flex"
 		>
 			<div className="mr-4">
-				<div className="bg-blue-500 rounded-full h-12 w-12 m-auto"></div>
+				{avatar ? (
+					<img
+						src={avatar}
+						className="rounded-full h-12 w-12 m-auto"
+					/>
+				) : (
+					<Blockie address={address} />
+				)}
 			</div>
 			<div className="">
 				<div className="title space-x-4 flex items-center">
 					<div className=" text-primaryText text-xl font-semibold">
-						Bhaisaab.eth
+						{name ?? minimizeAddress(address ?? email.sender)}
 					</div>
-					<div className=" text-secondaryText">Just now</div>
+					<div className=" text-secondaryText">
+						{human(moment(email.timestamp).toDate())}
+					</div>
 				</div>
 				<div className=" text-primaryText font-semibold text-lg mt-3">
 					Hey bro whats up with the BYAC NFT?

@@ -3,8 +3,11 @@ import { useRouter } from "next/router";
 import React from "react";
 import Account from "../Account";
 import Button from "../Button";
-import ComposeEmail from "../ComposeEmail";
 import { Logo, Send } from "../Icons";
+import dynamic from "next/dynamic";
+const ComposeEmail = dynamic(() => import("../ComposeEmail"), {
+	ssr: false,
+});
 
 const Header = () => {
 	const [open, setOpen] = React.useState(false);

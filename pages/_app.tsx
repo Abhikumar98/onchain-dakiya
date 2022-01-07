@@ -10,11 +10,17 @@ import "tailwindcss/tailwind.css";
 import Header from "../components/Header";
 import MetaHead from "../components/MetaHead";
 import "./globals.css";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 const APP_ID = process.env.NEXT_PUBLIC_MORALIS_APPLICATION_ID;
 const SERVER_URL = process.env.NEXT_PUBLIC_MORALIS_SERVER_URL;
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+	// const client = new ApolloClient({
+	// 	uri: "https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
+	// 	cache: new InMemoryCache(),
+	// });
+
 	return (
 		<MoralisProvider appId={APP_ID} serverUrl={SERVER_URL}>
 			<NextNProgress height={7} color="#9366F9" />

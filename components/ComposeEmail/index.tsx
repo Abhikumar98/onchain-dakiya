@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import Button from "../Button";
 import { Send } from "../Icons";
 import { toast } from "react-toastify";
+import { saveMessageOnIPFS } from "../../utils/queries";
+import { useMoralisData } from "../../hooks/useMoralisData";
 
 interface IComposeEmail {
 	readonly open: boolean;
@@ -13,11 +15,22 @@ interface IComposeEmail {
 }
 
 const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
+	const { account } = useMoralisData();
+
+	const [to, setTo] = useState("");
+	const [subject, setSubject] = useState("");
+	const [body, setBody] = useState("");
+
 	const handleSendEmail = async () => {
-		onClose();
-		toast.success("Email sent successfully!", {
-			position: "bottom-left",
-		});
+		try {
+			await saveMessageOnIPFS(account, to, subject, body);
+			onClose();
+			toast.success("Email sent successfully!", {
+				position: "bottom-left",
+			});
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	return (
@@ -70,6 +83,8 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 										</span>
 									</div>
 									<input
+										value={to}
+										onChange={(e) => setTo(e.target.value)}
 										type="text"
 										name="to"
 										id="to"
@@ -79,6 +94,10 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 								</div>
 								<div className="mt-1 relative rounded-md shadow-sm">
 									<input
+										value={subject}
+										onChange={(e) =>
+											setSubject(e.target.value)
+										}
 										type="text"
 										name="to"
 										id="to"
@@ -88,11 +107,14 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 								</div>
 								<div className="mt-1 relative rounded-md shadow-sm">
 									<textarea
+										value={body}
+										onChange={(e) =>
+											setBody(e.target.value)
+										}
 										rows={12}
 										name="comment"
 										id="comment"
 										className="shadow-sm block w-full sm:text-sm border-transparent bg-messageHover rounded-md"
-										defaultValue={""}
 										placeholder="Add message"
 									/>
 								</div>

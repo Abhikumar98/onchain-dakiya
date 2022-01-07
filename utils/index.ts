@@ -135,3 +135,10 @@ export const importTransaction = async (
 
 	await saveTransaction({ ...transaction });
 };
+
+export const decryptMessage = (message: string) => {
+	return message;
+};
+export const encryptMessage = (message: string) => {
+	return message;
+};

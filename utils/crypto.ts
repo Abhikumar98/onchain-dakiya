@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import abi from "./abi.json";
+import ethUtil from "ethereumjs-util";
 
 declare let window: any;
 
@@ -160,4 +161,63 @@ export const validateAndResolveAddress = async (
 		console.error(error);
 		return {};
 	}
+};
+
+export const contract = () => {
+	const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+	const { ethereum } = window;
+	if (ethereum) {
+		const signer = provider.getSigner();
+		const contractReader = new ethers.Contract(
+			"0x6a0b8C27311150dCc8FAe609077B73e7Fb8b0557",
+			abi,
+			signer
+		);
+		return contractReader;
+	}
+
+	// const signer = provider.getSigner();
+	// const contractReader = new ethers.Contract(
+	// 	"0x2517728e335c4622D051162674C24FA42B9fEd6D",
+	// 	abi,
+	// 	signer
+	// );
+	// return contractReader;
+};
+
+// const encryptedMessage = ethUtil.bufferToHex(
+// 	Buffer.from(
+// 		JSON.stringify(
+// 			sigUtil.encrypt(
+// 				encryptionPublicKey,
+// 				{ data: "Hello world!" },
+// 				"x25519-xsalsa20-poly1305"
+// 			)
+// 		),
+// 		"utf8"
+// 	)
+// );
+
+export const getPublicEncryptionKey = async (
+	account: string
+): Promise<string | null> => {
+	const { ethereum } = window;
+
+	if (ethereum) {
+		const pubEncryptionKey = await ethereum.request({
+			method: "eth_getEncryptionPublicKey",
+			params: [account],
+		});
+
+		console.log(pubEncryptionKey);
+
+		return pubEncryptionKey;
+	}
+
+	return null;
+};
+
+export const encryptMessage = async (message: string): Promise<string> => {
+	return "";
 };
