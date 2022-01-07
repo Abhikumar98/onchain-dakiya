@@ -21,7 +21,7 @@ const Button: FC<IButton> = ({
 	return (
 		<button
 			onClick={onClick}
-			disabled={disabled}
+			disabled={disabled || loading}
 			type="button"
 			className={` ${
 				fullWidth ? " w-full " : ""

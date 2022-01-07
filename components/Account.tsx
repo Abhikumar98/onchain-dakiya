@@ -79,7 +79,7 @@ function Account() {
 		<>
 			<Menu as="div" className="relative inline-block text-left z-40">
 				<div>
-					<Menu.Button className="inline-flex justify-center items-center space-x-2 w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 bg-transparent text-primaryText text-sm font-medium">
+					<div className=" cursor-default inline-flex justify-center items-center space-x-2 w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 bg-transparent text-primaryText text-sm font-medium">
 						{!!avatar && (
 							<img src={avatar} className="h-6 w-6 rounded-lg" />
 						)}
@@ -87,14 +87,14 @@ function Account() {
 						<p className="hidden md:block">
 							{ensAddress || getEllipsisTxt(account, 6)}
 						</p>
-						<ChevronDownIcon
+						{/* <ChevronDownIcon
 							className="-mr-1 ml-2 h-5 w-5"
 							aria-hidden="true"
-						/>
-					</Menu.Button>
+						/> */}
+					</div>
 				</div>
 
-				<Transition
+				{/* <Transition
 					as={Fragment}
 					enter="transition ease-out duration-100"
 					enterFrom="transform opacity-0 scale-95"
@@ -183,7 +183,7 @@ function Account() {
 											: "View on PolygonScan"}
 									</a>
 								)}
-							</Menu.Item> */}
+							</Menu.Item>
 							<Menu.Item>
 								{({ active }) => (
 									<button
@@ -202,7 +202,7 @@ function Account() {
 							</Menu.Item>
 						</div>
 					</Menu.Items>
-				</Transition>
+				</Transition> */}
 			</Menu>
 		</>
 	);

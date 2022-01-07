@@ -37,6 +37,7 @@ const AuthWrapper: FC = ({ children }) => {
 					<Button
 						loading={loading}
 						onClick={handleConnect}
+						disabled={loading}
 						fullWidth
 						className="justify-center"
 					>
