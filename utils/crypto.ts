@@ -1,8 +1,29 @@
 import { ethers } from "ethers";
 import abi from "./abi.json";
 import { encrypt } from "eth-sig-util";
+import { AuthenticateOptions } from "react-moralis/lib/hooks/core/useMoralis/_useMoralisAuth";
 
 declare let window: any;
+
+export const handleAuth = async (authenticate) => {
+	const options: AuthenticateOptions = {
+		signingMessage: `
+					Get your audience support with crypto!\n
+					With BuyMeACryptoCoffee your audience can support you with cryptocurrency.\n
+					How does it work?\n
+					- Supporter connects their Wallet on Crypto Coffee
+					- They enter their favorite creator’s wallet address and donate crypto.
+					- Creators can create their own crypto coffee page and share with their audience too
+				`,
+		chainId: process.env.NODE_ENV === "development" ? 4 : 1,
+	};
+
+	if (!(window as any).ethereum) {
+		options.provider = "walletconnect";
+	}
+
+	await authenticate(options);
+};
 
 export const checkIfWalletIsConnected = async (): Promise<string> => {
 	try {

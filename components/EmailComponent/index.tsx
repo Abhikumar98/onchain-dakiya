@@ -18,7 +18,7 @@ const EmailComponent = ({ email }: { email: Email }) => {
 	return (
 		<div
 			onClick={handleRoute}
-			className="p-4 rounded-r-md bg-primaryBackground hover:bg-messageHover cursor-pointer transition-all ease-in-out my-4 flex"
+			className="p-4 rounded-md bg-primaryBackground hover:bg-messageHover cursor-pointer transition-all ease-in-out my-4 flex"
 		>
 			<div className="mr-4">
 				{avatar ? (

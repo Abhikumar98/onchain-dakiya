@@ -11,20 +11,12 @@ import Header from "../components/Header";
 import MetaHead from "../components/MetaHead";
 import "./globals.css";
 import { contract } from "../utils/crypto";
+import AuthWrapper from "../components/AuthWrapper";
 
 const APP_ID = process.env.NEXT_PUBLIC_MORALIS_APPLICATION_ID;
 const SERVER_URL = process.env.NEXT_PUBLIC_MORALIS_SERVER_URL;
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
-	// const client = new ApolloClient({
-	// 	uri: "https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
-	// 	cache: new InMemoryCache(),
-	// });
-
-	useEffect(() => {
-		
-	}, []);
-
 	return (
 		<MoralisProvider appId={APP_ID} serverUrl={SERVER_URL}>
 			<NextNProgress height={7} color="#9366F9" />
@@ -40,12 +32,18 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 					href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
 					rel="stylesheet"
 				/>
+				<link
+					href="https://api.fontshare.com/css?f[]=clash-display@500&display=swap"
+					rel="stylesheet"
+				></link>
 			</Head>
 
-			<Header />
-			<div className="app-container">
-				<Component {...pageProps} />
-			</div>
+			<AuthWrapper>
+				<Header />
+				<div className="app-container">
+					<Component {...pageProps} />
+				</div>
+			</AuthWrapper>
 			<ToastContainer />
 			<ReactTooltip effect="solid" />
 		</MoralisProvider>

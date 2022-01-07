@@ -24,6 +24,7 @@ module.exports = {
 		},
 		fontFamily: {
 			inter: ["Inter"],
+			landing: ["Clash Display"],
 		},
 		colors: {
 			transparent: "transparent",
@@ -41,6 +42,7 @@ module.exports = {
 			primaryText: "#ffffff",
 			secondaryText: "#A9A9B7",
 			messageHover: "#40404a",
+			landing: "#101013",
 			"heading-color": "var(--heading-color)",
 		},
 	},

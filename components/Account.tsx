@@ -14,12 +14,12 @@ import Loader from "./Loader";
 function Account() {
 	const {
 		authenticate,
-		isAuthenticated,
 		account: walletAddress,
 		user,
 		chainId,
 		logout,
 	} = useMoralisData();
+
 	const [loading, setLoading] = useState(false);
 
 	const queriedAddress = user?.get("ethAddress");
@@ -63,7 +63,7 @@ function Account() {
 		);
 	}
 
-	if (!isAuthenticated) {
+	if (!account) {
 		return (
 			<button
 				type="button"
