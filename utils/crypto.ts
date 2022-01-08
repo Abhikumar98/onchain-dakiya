@@ -191,7 +191,7 @@ export const listenEvents = () => {
 	const { ethereum } = window;
 	if (ethereum) {
 		const contractReader = new ethers.Contract(
-			"0x6a0b8C27311150dCc8FAe609077B73e7Fb8b0557",
+			"0xaD06FCFfdcd6cDb7C29f7f189A4E3ED92Dbe83Fa",
 			abi,
 			provider
 		);
@@ -206,7 +206,7 @@ export const contract = () => {
 	if (ethereum) {
 		const signer = provider.getSigner();
 		const contractReader = new ethers.Contract(
-			"0x61E4019b9B459Da462663D1458F47fD58dF232e7",
+			"0xaD06FCFfdcd6cDb7C29f7f189A4E3ED92Dbe83Fa",
 			abi,
 			signer
 		);
@@ -242,14 +242,18 @@ export const encryptMessage = async (
 		data: message,
 		version: "x25519-xsalsa20-poly1305",
 	});
-	return encryptedData.ciphertext;
+	const hexValue = ethers.utils.hexlify(
+		Buffer.from(JSON.stringify(encryptedData))
+	);
+	return hexValue;
 };
 
 export const decryptMessage = async (cipherText: string): Promise<string> => {
 	const { ethereum } = window;
 
 	if (ethereum) {
-		const decryptedData = ethereum.request({
+		console.log({ a: ethereum.selectedAddress, cipherText });
+		const decryptedData = await ethereum.request({
 			method: "eth_decrypt",
 			params: [cipherText, ethereum.selectedAddress],
 		});

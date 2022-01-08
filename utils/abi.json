@@ -32,6 +32,13 @@
 	},
 	{
 		"inputs": [],
+		"name": "checkUserRegistration",
+		"outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "getAllThreads",
 		"outputs": [
 			{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }
@@ -70,6 +77,26 @@
 				"internalType": "struct Messaging.Message[]",
 				"name": "",
 				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{ "internalType": "address", "name": "receiver", "type": "address" }
+		],
+		"name": "getPubEncKeys",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "sender_key",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "receiver_key",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -174,9 +201,23 @@
 				"internalType": "string",
 				"name": "_receiver_key",
 				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "senderPubEncKey",
+				"type": "string"
 			}
 		],
 		"name": "sendMessage",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{ "internalType": "string", "name": "encKey", "type": "string" }
+		],
+		"name": "setPubEncKey",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

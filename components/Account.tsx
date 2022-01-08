@@ -1,12 +1,13 @@
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import Link from "next/link";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { AuthenticateOptions } from "react-moralis/lib/hooks/core/useMoralis/_useMoralisAuth";
 import { toast } from "react-toastify";
 import { getEllipsisTxt } from "../helpers/formatters";
 import { getExplorer } from "../helpers/networks";
 import { useMoralisData } from "../hooks/useMoralisData";
+import { contract, getPublicEncryptionKey } from "../utils/crypto";
 import { useEnsAddress } from "../utils/useEnsAddress";
 import Blockie from "./Blockie";
 import Loader from "./Loader";
@@ -55,6 +56,25 @@ function Account() {
 		}
 	};
 
+	const checkForRegistration = async (address: string) => {
+		try {
+			const response = await contract().checkUserRegistration();
+			if (response === false) {
+				console.log({ address });
+				const key = await getPublicEncryptionKey(address);
+				await contract().setPubEncKey(key);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	useEffect(() => {
+		if (account) {
+			checkForRegistration(account);
+		}
+	}, [account]);
+
 	if (loading) {
 		return (
 			<div className=" bg-gray-200 rounded-lg px-2 py-3 w-48 flex justify-center">
@@ -87,14 +107,11 @@ function Account() {
 						<p className="hidden md:block">
 							{ensAddress || getEllipsisTxt(account, 6)}
 						</p>
-						{/* <ChevronDownIcon
-							className="-mr-1 ml-2 h-5 w-5"
-							aria-hidden="true"
-						/> */}
+						<div onClick={logout}>SIGN OUT</div>
 					</div>
 				</div>
 
-				{/* <Transition
+				<Transition
 					as={Fragment}
 					enter="transition ease-out duration-100"
 					enterFrom="transform opacity-0 scale-95"
@@ -104,105 +121,9 @@ function Account() {
 					leaveTo="transform opacity-0 scale-95"
 				>
 					<Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
-						<div className="py-1 z-20">
-							{/* <Menu.Item>
-								{({ active }) => (
-									<a
-										className={classNames(
-											active
-												? "bg-gray-100 text-gray-900"
-												: "text-gray-700",
-											"block px-4 py-2 text-sm"
-										)}
-									>
-										<Link href={`/${account}`}>
-											Checkout your page
-										</Link>
-									</a>
-								)}
-							</Menu.Item>
-							<div className="block md:hidden">
-								{chainId == "0x1" && (
-									<Menu.Item>
-										{({ active }) => (
-											<a
-												onClick={() =>
-													switchNetwork("0x89")
-												}
-												className={classNames(
-													active
-														? "bg-gray-100 text-gray-900"
-														: "text-gray-700",
-													"block px-4 py-2 text-sm"
-												)}
-											>
-												Switch to Polygon
-											</a>
-										)}
-									</Menu.Item>
-								)}
-
-								{chainId !== "0x1" && (
-									<Menu.Item>
-										{({ active }) => (
-											<a
-												onClick={() =>
-													switchNetwork("0x1")
-												}
-												className={classNames(
-													active
-														? "bg-gray-100 text-gray-900"
-														: "text-gray-700",
-													"block px-4 py-2 text-sm"
-												)}
-											>
-												Switch to Ethereum
-											</a>
-										)}
-									</Menu.Item>
-								)}
-							</div>
-
-							<Menu.Item>
-								{({ active }) => (
-									<a
-										href={`${getExplorer(
-											chainId
-										)}address/${account}`}
-										target="_blank"
-										rel="noreferrer"
-										className={classNames(
-											active
-												? "bg-gray-100 text-gray-900"
-												: "text-gray-700",
-											"block px-4 py-2 text-sm"
-										)}
-									>
-										{chainId === "0x1"
-											? "View on Etherscan"
-											: "View on PolygonScan"}
-									</a>
-								)}
-							</Menu.Item>
-							<Menu.Item>
-								{({ active }) => (
-									<button
-										onClick={logout}
-										type="submit"
-										className={`${
-											active
-												? "bg-gray-100 text-gray-900"
-												: "text-gray-700"
-										} block w-full text-left px-4 py-2 text-sm
-										`}
-									>
-										Sign out
-									</button>
-								)}
-							</Menu.Item>
-						</div>
+						<div className="py-1 z-20"></div>
 					</Menu.Items>
-				</Transition> */}
+				</Transition>
 			</Menu>
 		</>
 	);
