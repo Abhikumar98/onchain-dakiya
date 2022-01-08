@@ -4,7 +4,7 @@ import SearchBar from "../components/SearchBar";
 import { Email } from "../contracts";
 import { useMoralisData } from "../hooks/useMoralisData";
 import { minimizeAddress } from "../utils";
-import { getAllUserMessages } from "../utils/queries";
+import { fetchMessages, getAllUserMessages } from "../utils/queries";
 
 declare let window: any;
 
@@ -18,8 +18,8 @@ const Dashboard: React.FC = () => {
 		try {
 			console.log(account);
 
-			const response = await getAllUserMessages(account);
-			console.log(response);
+			const response = await fetchMessages(account, 10);
+			console.log({ response });
 			const cleanedEmails = response
 				?.map((email: any) => {
 					const { msg_id, receiver, sender, timestamp, uri } = email;

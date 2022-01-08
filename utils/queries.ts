@@ -1,20 +1,28 @@
+import { uuid } from "uuidv4";
 import axios from "axios";
-import { contract, getPublicEncryptionKey, uploadToIPFS } from "./crypto";
+import { AES } from "crypto-js";
+import {
+	contract,
+	encryptMessage,
+	getPublicEncryptionKey,
+	uploadToIPFS,
+} from "./crypto";
 
 export const fetchMessages = async (
-	limit: number,
-	page: number
+	account: string,
+	limit: number
+	// page: number
 ): Promise<any> => {
 	const response = await axios.post(
 		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
 		{
 			query: `{
-                messages(first: ${limit}, ) {
+                messages(first: ${limit}) {
                     id
-                    messageCount
-                    msg_id
                     _receiver
+					_sender
                     _uri
+					_timestamp
                 }
         }`,
 		}
@@ -45,22 +53,34 @@ export const saveMessageOnIPFS = async (
 		subject,
 	});
 
-	// await getPublicEncryptionKey(sender);
+	const encryptionKey = uuid();
+	const encryptedData = AES.encrypt(dataToEncrypt, encryptionKey);
 
-	const encryptionKey = ""; // generate a encryption key
+	const senderPubKey = await getPublicEncryptionKey(sender);
+	const receiverPubKey = await getPublicEncryptionKey(receiver);
 
-	const encryptedData = dataToEncrypt; // encrypt dataToEncrypt
-	const senderPubKeyEnc = ""; // encrypt senderPubKey
-	const receiverPubKeyEnc = ""; // encrypt receiverPubKey
+	console.log({ encryptionKey, encryptedData });
 
-	const formattedData = JSON.stringify({
-		senderKey: senderPubKeyEnc,
-		receiverKey: receiverPubKeyEnc,
-		data: encryptedData,
-	});
+	const senderPubKeyEnc = await encryptMessage(encryptionKey, senderPubKey);
+
+	console.log({ senderPubKeyEnc });
+
+	const receiverPubKeyEnc = encryptMessage(encryptionKey, receiverPubKey);
+
+	const formattedData = JSON.stringify(encryptedData);
 
 	const ipfsHash = await uploadToIPFS(formattedData);
 
-	const response = await contract().sendMessage(ipfsHash, receiver);
-	return response;
+	const sendContractMessage = {
+		_thread_id: 0,
+		_uri: ipfsHash,
+		_receiver: receiver,
+		_sender_key: senderPubKeyEnc,
+		_receiver_key: receiverPubKeyEnc,
+	};
+
+	console.log({ sendContractMessage });
+
+	// const response = await contract().sendMessage(sendContractMessage);
+	return "response";
 };

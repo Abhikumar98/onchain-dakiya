@@ -1,7 +1,8 @@
 import { ethers } from "ethers";
 import abi from "./abi.json";
-import { encrypt } from "eth-sig-util";
+import { encrypt } from "@metamask/eth-sig-util";
 import { AuthenticateOptions } from "react-moralis/lib/hooks/core/useMoralis/_useMoralisAuth";
+import { create } from "ipfs-http-client";
 
 declare let window: any;
 
@@ -205,7 +206,7 @@ export const contract = () => {
 	if (ethereum) {
 		const signer = provider.getSigner();
 		const contractReader = new ethers.Contract(
-			"0x6a0b8C27311150dCc8FAe609077B73e7Fb8b0557",
+			"0x61E4019b9B459Da462663D1458F47fD58dF232e7",
 			abi,
 			signer
 		);
@@ -236,13 +237,14 @@ export const encryptMessage = async (
 	message: string,
 	publicKey: string
 ): Promise<string> => {
-	const encryptedData = encrypt(
+	const encryptedData = encrypt({
 		publicKey,
-		{ data: message },
-		"x25519-xsalsa20-poly1305"
-	);
+		data: message,
+		version: "x25519-xsalsa20-poly1305",
+	});
 	return encryptedData.ciphertext;
 };
+
 export const decryptMessage = async (cipherText: string): Promise<string> => {
 	const { ethereum } = window;
 
@@ -254,8 +256,6 @@ export const decryptMessage = async (cipherText: string): Promise<string> => {
 		return decryptedData;
 	}
 };
-
-import { create } from "ipfs-http-client";
 
 export const ipfs = create({
 	host: "ipfs.infura.io",
