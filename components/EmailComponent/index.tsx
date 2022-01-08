@@ -1,19 +1,44 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { Email } from "../../contracts";
 import { useEnsAddress } from "../../utils/useEnsAddress";
 import Blockie from "../Blockie";
 import human from "human-time";
 import moment from "moment";
 import { minimizeAddress } from "../../utils";
+import { fetchFromIPFS } from "../../utils/crypto";
 
 const EmailComponent = ({ email }: { email: Email }) => {
 	const router = useRouter();
 	const { name, address, avatar } = useEnsAddress(email.sender);
 
+	const [loading, setLoading] = React.useState(false);
+	const [message, setMessage] = React.useState<string>("");
+	const [subject, setSubject] = React.useState<string>("");
+
 	const handleRoute = () => {
 		router.push("/123");
 	};
+
+	const resolveIPFS = async () => {
+		try {
+			setLoading(true);
+			const result = await fetchFromIPFS(email.uri);
+			const parsedResult = JSON.parse(result);
+			const data = JSON.parse(parsedResult.data);
+			console.log({ ...data });
+			setMessage(data.message);
+			setSubject(data.subject);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		resolveIPFS();
+	}, []);
 
 	return (
 		<div
@@ -40,12 +65,14 @@ const EmailComponent = ({ email }: { email: Email }) => {
 					</div>
 				</div>
 				<div className=" text-primaryText font-semibold text-sm sm:text-base md:text-lg mt-3">
-					Hey bro whats up with the BYAC NFT?
+					{loading
+						? "loading..."
+						: subject ?? "Prolly invalid subject"}
 				</div>
 				<div className=" text-secondaryText text-xs sm:text-sm md:text-base mt-1">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-					Volutpat odio habitant in tempor tortor massa. Mattis varius
-					quam sodales sit et at nibh arcu.
+					{loading
+						? "loading..."
+						: message ?? "Prolly invalid message"}
 				</div>
 			</div>
 		</div>

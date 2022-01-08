@@ -35,6 +35,7 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 					render: "Email sent successfully",
 					autoClose: 5000,
 					isLoading: false,
+					draggable: true,
 				});
 			});
 		} catch (error) {

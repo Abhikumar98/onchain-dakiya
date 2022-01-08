@@ -1,12 +1,5 @@
 import axios from "axios";
-// import { create } from "ipfs-http-client";
-import { contract, getPublicEncryptionKey } from "./crypto";
-
-// export const ipfsI = create({
-// 	host: "ipfs.infura.io",
-// 	port: 5001,
-// 	protocol: "https",
-// });
+import { contract, getPublicEncryptionKey, uploadToIPFS } from "./crypto";
 
 export const fetchMessages = async (
 	limit: number,
@@ -52,7 +45,7 @@ export const saveMessageOnIPFS = async (
 		subject,
 	});
 
-	await getPublicEncryptionKey(sender);
+	// await getPublicEncryptionKey(sender);
 
 	const encryptionKey = ""; // generate a encryption key
 
@@ -66,17 +59,8 @@ export const saveMessageOnIPFS = async (
 		data: encryptedData,
 	});
 
-	// const buffer = Buffer.from("hello");
+	const ipfsHash = await uploadToIPFS(formattedData);
 
-	// console.log({ buffer });
-
-	// const result = await ipfsI.add(buffer);
-
-	// const ipfsIHash = result.cid.toString();
-
-	// const res = await ipfsI.get(`/${}`);
-	// console.log({ res, ipfsIHash });
-
-	const response = await contract().sendMessage("ipfsIHash", receiver);
+	const response = await contract().sendMessage(ipfsHash, receiver);
 	return response;
 };

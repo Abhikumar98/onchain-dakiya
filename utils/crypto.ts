@@ -254,3 +254,25 @@ export const decryptMessage = async (cipherText: string): Promise<string> => {
 		return decryptedData;
 	}
 };
+
+import { create } from "ipfs-http-client";
+
+export const ipfs = create({
+	host: "ipfs.infura.io",
+	port: 5001,
+	protocol: "https",
+});
+
+export const uploadToIPFS = async (message: string): Promise<string> => {
+	const buffer = Buffer.from(message);
+	console.log({ buffer });
+	const result = await ipfs.add(buffer);
+	const ipfsHash = result.cid.toString();
+	return ipfsHash;
+};
+
+export const fetchFromIPFS = async (uri: string): Promise<string> => {
+	const result = await fetch(`https://ipfs.infura.io/ipfs/${uri}`);
+	const text = await result.text();
+	return text;
+};
