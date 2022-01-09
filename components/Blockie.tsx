@@ -12,18 +12,20 @@ function Blockie(props) {
 	const { account, user } = useMoralisData();
 
 	if (!props.address && !account)
-		return <span className="h-5 w-5 bg-gray-500 inline-block"></span>;
+		return <span className="h-12 w-12 bg-gray-500 inline-block"></span>;
 
 	return (
-		<Blockies
-			seed={
-				props.currentWallet
-					? account.toLowerCase()
-					: props.address?.toLowerCase()
-			}
-			className="rounded-lg"
-			{...props}
-		/>
+		<div className="h-12 w-12 flex items-center justify-center">
+			<Blockies
+				size={12}
+				seed={
+					props.currentWallet
+						? account.toLowerCase()
+						: props.address?.toLowerCase()
+				}
+				className="rounded-full"
+			/>
+		</div>
 	);
 }
 

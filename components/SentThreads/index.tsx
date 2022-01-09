@@ -75,7 +75,7 @@ const SentThreads = () => {
 				<>
 					{!emails.length && <EmptyThreads />}
 					{emails.map((email) => (
-						<ThreadComponent key={email.thread_id} email={email} />
+						<ThreadComponent receiverPin key={email.thread_id} email={email} />
 					))}
 				</>
 			)}
