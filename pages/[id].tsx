@@ -81,18 +81,20 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 			});
 
 			const response = await getAllThreadMessages(threadId);
-			const cleanedMessages: Message[] = response.map((message: any) => {
-				const newMessage: Message = {
-					txId: message.id,
-					receiver: message._receiver,
-					sender: message._sender,
-					timestamp: message._timestamp,
-					message: "",
-					subject: "",
-					uri: message._uri,
-				};
-				return newMessage;
-			});
+			const cleanedMessages: Message[] = response
+				.map((message: any) => {
+					const newMessage: Message = {
+						txId: message.id,
+						receiver: message._receiver,
+						sender: message._sender,
+						timestamp: message._timestamp,
+						message: "",
+						subject: "",
+						uri: message._uri,
+					};
+					return newMessage;
+				})
+				.sort((a, b) => a.timestamp - b.timestamp);
 			console.log(cleanedMessages[0]);
 			if (!encryptionKey) {
 				if (cleanedMessages[0].sender === account) {
