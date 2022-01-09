@@ -6,8 +6,12 @@ import SubjectHeader from "../components/SubjectHeader";
 import ThreadMessage from "../components/ThreadMessage";
 import { Message } from "../contracts";
 import { useMoralisData } from "../hooks/useMoralisData";
-import { decryptMessage, getPublicEncryptionKey } from "../utils/crypto";
-import { getAllThreadMessages, getThread } from "../utils/queries";
+import { decryptMessage, fetchFromIPFS } from "../utils/crypto";
+import {
+	decryptCipherMessage,
+	getAllThreadMessages,
+	getThread,
+} from "../utils/queries";
 
 declare let window: any;
 
@@ -26,6 +30,12 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [encryptionKey, setEncryptionKey] = useState<string>("");
+	// separate state for sender_key receiver_key
+	const [senderKey, setSenderKey] = useState<string>("");
+	const [receiverKey, setReceiverKey] = useState<string>("");
+
+	// subject state
+	const [subject, setSubject] = useState<string>("");
 
 	const decryptEncrytionKey = async (key: string): Promise<string> => {
 		try {
@@ -37,11 +47,38 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 		}
 	};
 
+	const subjectURI = messages?.[0]?.uri;
+
+	const getSubject = async () => {
+		try {
+			if (!subjectURI) {
+				return;
+			}
+			const ipfsMessage = await fetchFromIPFS(subjectURI);
+			const decryptedString = decryptCipherMessage(
+				ipfsMessage,
+				encryptionKey
+			);
+			const parsedData = JSON.parse(decryptedString);
+			setSubject(parsedData.subject);
+		} catch (error) {
+			console.trace(error);
+		}
+	};
+
 	const getMessagesFromThread = async (threadId: string) => {
 		try {
 			const thread = await getThread(threadId);
 
 			const { _sender_key, _receiver_key } = thread;
+
+			setSenderKey(_sender_key);
+			setReceiverKey(_receiver_key);
+
+			console.log({
+				_sender_key,
+				_receiver_key,
+			});
 
 			const response = await getAllThreadMessages(threadId);
 			const cleanedMessages: Message[] = response.map((message: any) => {
@@ -56,6 +93,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 				};
 				return newMessage;
 			});
+			console.log(cleanedMessages[0]);
 			if (!encryptionKey) {
 				if (cleanedMessages[0].sender === account) {
 					const decryptedEncKey = await decryptEncrytionKey(
@@ -63,6 +101,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 					);
 					setEncryptionKey(decryptedEncKey);
 				} else {
+					console.log(cleanedMessages[0].receiver);
 					const decryptedEncKey = await decryptEncrytionKey(
 						_receiver_key
 					);
@@ -83,18 +122,38 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 		}
 	}, [threadId]);
 
+	useEffect(() => {
+		if (encryptionKey) {
+			getSubject();
+		}
+	}, [encryptionKey, messages]);
+
+	const receiver =
+		messages?.[0]?.sender === account
+			? messages?.[0]?.receiver
+			: messages?.[0]?.sender;
+
 	return (
 		<>
 			<div className="relative">
-				<SubjectHeader />
+				<SubjectHeader
+					subject={subject}
+					sender={messages?.[0]?.sender ?? ""}
+				/>
 				{messages.map((message) => (
 					<ThreadMessage
 						encKey={encryptionKey}
-						key={encryptionKey}
+						key={message.txId}
 						message={message}
 					/>
 				))}
-				<ReplyBar />
+				<ReplyBar
+					receiver={receiver}
+					encryptionKey={encryptionKey}
+					threadId={threadId}
+					senderPubEncKey={senderKey}
+					receiverPubEncKey={receiverKey}
+				/>
 			</div>
 		</>
 	);

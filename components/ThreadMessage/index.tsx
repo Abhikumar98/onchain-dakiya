@@ -24,7 +24,7 @@ const ThreadMessage = ({
 			const parsedData = JSON.parse(decryptedString);
 			setDecryptedMessage(parsedData.message);
 		} catch (error) {
-			console.error(error);
+			console.trace(error);
 			toast.error(error.message ?? "Something went wrong");
 		}
 	};
