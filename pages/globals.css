@@ -13,7 +13,7 @@ div.embed-modal .ant-modal-header {
 }
 
 .app-container {
-	height: calc(100vh - (5.4rem));
+	height: calc(100vh - (6.6rem));
 	overflow: auto;
 	padding: 1rem 10rem;
 	margin-bottom: 1rem;
