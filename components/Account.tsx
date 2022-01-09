@@ -56,25 +56,6 @@ function Account() {
 		}
 	};
 
-	const checkForRegistration = async (address: string) => {
-		try {
-			const response = await contract().checkUserRegistration();
-			if (response === false) {
-				console.log({ address });
-				const key = await getPublicEncryptionKey(address);
-				await contract().setPubEncKey(key);
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	};
-
-	useEffect(() => {
-		if (account) {
-			checkForRegistration(account);
-		}
-	}, [account]);
-
 	if (loading) {
 		return (
 			<div className=" bg-gray-200 rounded-lg px-2 py-3 w-48 flex justify-center">
@@ -107,8 +88,10 @@ function Account() {
 						<p className="hidden md:block">
 							{ensAddress || getEllipsisTxt(account, 6)}
 						</p>
-						<div onClick={logout}>SIGN OUT</div>
 					</div>
+					{/* <div className="bg-gray-50 rounded-md" onClick={logout}>
+						SIGN OUT
+					</div> */}
 				</div>
 
 				<Transition

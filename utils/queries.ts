@@ -2,7 +2,7 @@ import { uuid } from "uuidv4";
 import axios from "axios";
 // const { subtle, getRandomValues } = require("crypto").webcrypto;
 
-import { AES } from "crypto-js";
+import { AES, enc } from "crypto-js";
 import {
 	contract,
 	decryptMessage,
@@ -76,55 +76,29 @@ export const saveMessageOnIPFS = async (
 		subject,
 	});
 
-	// const { key: encryptionKey, iv } = await generateAesKey();
 	const encryptionKey = uuid();
-	const encryptedData = AES.encrypt(dataToEncrypt, encryptionKey);
-
-	// const senderPubKey = await getPublicEncryptionKey(sender);
-	// const receiverPubKey = await getPublicEncryptionKey(receiver);
-	// console.log({ senderPubKey });
-
-	console.log({ encryptionKey, senderPubEncKey });
-
-	// const keyyy = await getPublicEncryptionKey(sender);
-
-	// console.log({ keyyy });
+	const encryptedData = AES.encrypt(dataToEncrypt, encryptionKey).toString();
 
 	const senderPubKeyEnc = await encryptMessage(
 		encryptionKey,
 		senderPubEncKey
 	);
 
-	console.log({
-		senderPubKeyEnc,
-	});
-
-	const descriptedKey = await decryptMessage(senderPubKeyEnc);
-	console.log({ descriptedKey });
-
-	console.log({ senderPubKeyEnc });
-
 	const receiverPubKeyEnc = await encryptMessage(
 		encryptionKey,
 		receiverPubEncKey
 	);
 
-	console.log({ receiverPubKeyEnc });
-
-	const formattedData = JSON.stringify(encryptedData.toString());
+	const formattedData = JSON.stringify(encryptedData);
 
 	const ipfsHash = await uploadToIPFS(formattedData);
 
-	const sendContractMessage = {
-		_thread_id: 0,
-		_uri: ipfsHash,
-		_receiver: receiver,
-		_sender_key: senderPubKeyEnc,
-		_receiver_key: receiverPubKeyEnc,
-	};
-
-	console.log({ sendContractMessage });
-
-	// const response = await contract().sendMessage(sendContractMessage);
-	return "response";
+	const response = await contract().sendMessage(
+		0,
+		ipfsHash,
+		receiver,
+		senderPubKeyEnc,
+		receiverPubKeyEnc
+	);
+	return response;
 };

@@ -10,12 +10,6 @@
 			},
 			{
 				"indexed": false,
-				"internalType": "address",
-				"name": "sender",
-				"type": "address"
-			},
-			{
-				"indexed": false,
 				"internalType": "string",
 				"name": "uri",
 				"type": "string"
@@ -25,60 +19,58 @@
 				"internalType": "uint256",
 				"name": "timestamp",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "thread_id",
+				"type": "uint256"
 			}
 		],
 		"name": "MessageSent",
 		"type": "event"
 	},
 	{
-		"inputs": [],
-		"name": "checkUserRegistration",
-		"outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getAllThreads",
-		"outputs": [
-			{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
+		"anonymous": false,
 		"inputs": [
 			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "receiver",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"indexed": false,
 				"internalType": "uint256",
 				"name": "thread_id",
 				"type": "uint256"
-			}
-		],
-		"name": "getMessages",
-		"outputs": [
+			},
 			{
-				"components": [
-					{
-						"internalType": "address",
-						"name": "receiver",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "uri",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct Messaging.Message[]",
-				"name": "",
-				"type": "tuple[]"
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
 			}
 		],
+		"name": "ThreadCreated",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "checkUserRegistration",
+		"outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
 		"stateMutability": "view",
 		"type": "function"
 	},
@@ -97,52 +89,6 @@
 				"internalType": "string",
 				"name": "receiver_key",
 				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "thread_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getThread",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "thread_id",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "receiver",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "receiver_key",
-						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "sender",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "sender_key",
-						"type": "string"
-					}
-				],
-				"internalType": "struct Messaging.Thread",
-				"name": "",
-				"type": "tuple"
 			}
 		],
 		"stateMutability": "view",
@@ -201,11 +147,6 @@
 				"internalType": "string",
 				"name": "_receiver_key",
 				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "senderPubEncKey",
-				"type": "string"
 			}
 		],
 		"name": "sendMessage",
@@ -227,6 +168,33 @@
 		"name": "threadCount",
 		"outputs": [
 			{ "internalType": "uint256", "name": "", "type": "uint256" }
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{ "internalType": "uint256", "name": "", "type": "uint256" }
+		],
+		"name": "threads",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "thread_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "receiver",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "receiver_key",
+				"type": "string"
+			},
+			{ "internalType": "address", "name": "sender", "type": "address" },
+			{ "internalType": "string", "name": "sender_key", "type": "string" }
 		],
 		"stateMutability": "view",
 		"type": "function"
