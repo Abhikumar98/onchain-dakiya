@@ -84,7 +84,7 @@ function Account() {
 						{!!avatar && (
 							<img src={avatar} className="h-6 w-6 rounded-lg" />
 						)}
-						{!avatar && <Blockie currentWallet scale={3} />}
+						{!avatar && <Blockie currentWallet size={6.5} />}
 						<p className="hidden md:block">
 							{ensAddress || getEllipsisTxt(account, 6)}
 						</p>

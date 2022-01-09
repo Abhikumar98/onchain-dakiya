@@ -15,17 +15,15 @@ function Blockie(props) {
 		return <span className="h-12 w-12 bg-gray-500 inline-block"></span>;
 
 	return (
-		<div className="h-12 w-12 flex items-center justify-center">
-			<Blockies
-				size={12}
-				seed={
-					props.currentWallet
-						? account.toLowerCase()
-						: props.address?.toLowerCase()
-				}
-				className="rounded-full"
-			/>
-		</div>
+		<Blockies
+			size={props.size ?? 12}
+			seed={
+				props.currentWallet
+					? account.toLowerCase()
+					: props.address?.toLowerCase()
+			}
+			className="rounded-full"
+		/>
 	);
 }
 
