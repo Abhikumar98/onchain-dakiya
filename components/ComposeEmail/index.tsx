@@ -29,7 +29,6 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 				position: "bottom-left",
 			});
 			listenEvents().on("MessageSent", (...params) => {
-				console.log("coming here ---> ", params, toastId.current);
 				toast.update(toastId.current, {
 					type: toast.TYPE.SUCCESS,
 					render: "Email sent successfully",

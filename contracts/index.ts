@@ -1,9 +1,8 @@
-export interface Email {
-	readonly msg_id: string;
+export interface EmailThread {
+	readonly thread_id: string;
 	readonly receiver: string;
 	readonly sender: string;
 	readonly timestamp: number;
-	readonly uri: string;
 }
 
 export class CreateEmail {
@@ -31,4 +30,14 @@ export class CreateEmail {
 	encrypt() {
 		// encrypt data
 	}
+}
+
+export interface Message {
+	sender: string;
+	receiver: string;
+	message: string;
+	subject: string;
+	timestamp: string;
+	txId: string;
+	uri: string;
 }

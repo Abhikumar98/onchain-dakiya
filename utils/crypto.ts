@@ -191,7 +191,7 @@ export const listenEvents = () => {
 	const { ethereum } = window;
 	if (ethereum) {
 		const contractReader = new ethers.Contract(
-			"0xAf591B88f98D506240A73E94bc2Ae1f817c64650",
+			"0xdC6d44BFea70D9B5DeD61Bdb59c052F16B72F1f0",
 			abi,
 			provider
 		);
@@ -206,7 +206,7 @@ export const contract = () => {
 	if (ethereum) {
 		const signer = provider.getSigner();
 		const contractReader = new ethers.Contract(
-			"0xAf591B88f98D506240A73E94bc2Ae1f817c64650",
+			"0xdC6d44BFea70D9B5DeD61Bdb59c052F16B72F1f0",
 			abi,
 			signer
 		);
@@ -252,7 +252,6 @@ export const decryptMessage = async (cipherText: string): Promise<string> => {
 	const { ethereum } = window;
 
 	if (ethereum) {
-		console.log({ a: ethereum.selectedAddress, cipherText });
 		const decryptedData = await ethereum.request({
 			method: "eth_decrypt",
 			params: [cipherText, ethereum.selectedAddress],

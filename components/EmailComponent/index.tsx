@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { Email } from "../../contracts";
+import { EmailThread } from "../../contracts";
 import { useEnsAddress } from "../../utils/useEnsAddress";
 import Blockie from "../Blockie";
 import human from "human-time";
@@ -9,7 +9,7 @@ import { minimizeAddress } from "../../utils";
 import { fetchFromIPFS } from "../../utils/crypto";
 import { toast } from "react-toastify";
 
-const EmailComponent = ({ email }: { email: Email }) => {
+const EmailComponent = ({ email }: { email: EmailThread }) => {
 	const router = useRouter();
 	const { name, address, avatar } = useEnsAddress(email.sender);
 
@@ -18,18 +18,18 @@ const EmailComponent = ({ email }: { email: Email }) => {
 	const [subject, setSubject] = React.useState<string>("");
 
 	const handleRoute = () => {
-		router.push("/123");
+		router.push(`/${email.thread_id}`);
 	};
 
 	const resolveIPFS = async () => {
 		try {
 			setLoading(true);
-			const result = await fetchFromIPFS(email.uri);
-			const parsedResult = JSON.parse(result);
-			const data = JSON.parse(parsedResult.data);
-			console.log({ ...data });
-			setMessage(data.message);
-			setSubject(data.subject);
+			// const result = await fetchFromIPFS(email.uri);
+			// const parsedResult = JSON.parse(result);
+			// const data = JSON.parse(parsedResult.data);
+			// console.log({ ...data });
+			// setMessage(data.message);
+			// setSubject(data.subject);
 		} catch (error) {
 			console.error(error);
 			toast.error(error.message ?? "Something went wrong");

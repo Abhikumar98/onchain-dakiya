@@ -1,15 +1,8 @@
-import { uuid } from "uuidv4";
 import axios from "axios";
 // const { subtle, getRandomValues } = require("crypto").webcrypto;
-
 import { AES, enc } from "crypto-js";
-import {
-	contract,
-	decryptMessage,
-	encryptMessage,
-	getPublicEncryptionKey,
-	uploadToIPFS,
-} from "./crypto";
+import { uuid } from "uuidv4";
+import { contract, encryptMessage, uploadToIPFS } from "./crypto";
 
 export const fetchMessages = async (
 	account: string,
@@ -31,18 +24,68 @@ export const fetchMessages = async (
 		}
 	);
 
-	console.log(response.data);
-
 	return response.data.data.messages;
 };
 
-export const getAllUserMessages = async (address: string): Promise<any> => {
-	console.log({ address });
-
+export const getAllUserThreads = async (address: string): Promise<any> => {
 	if (!address) return null;
 
-	const response = await contract().allMessages(address);
-	return response;
+	const response = await axios.post(
+		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
+		{
+			query: `{
+                threads(first: ${50}, where: { _receiver: "${address}" }) {
+                    id
+                    _receiver
+					_sender
+					_thread_id
+					_timestamp
+                }
+        }`,
+		}
+	);
+
+	return response.data.data.threads;
+};
+export const getThread = async (threadId: string): Promise<any> => {
+	const response = await axios.post(
+		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
+		{
+			query: `{
+                threads(where: { _thread_id: "${threadId}" }) {
+                    id
+                    _receiver
+					_sender
+					_thread_id
+					_timestamp
+					_sender_key
+					_receiver_key
+                }
+        }`,
+		}
+	);
+
+	return response.data.data.threads[0];
+};
+
+export const getAllThreadMessages = async (threadId: string): Promise<any> => {
+	const response = await axios.post(
+		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
+		{
+			query: `{
+                messages(first: ${100}, where: { _thread_id: ${threadId} }) {
+                    id
+                    _receiver
+					_sender
+					_thread_id
+					_timestamp
+					_uri
+                }
+        }`,
+		}
+	);
+
+	return response.data.data.messages;
 };
 
 async function generateAesKey() {
@@ -60,13 +103,19 @@ async function generateAesKey() {
 	return { key, iv };
 }
 
+export const decryptCipherMessage = (
+	message: string,
+	encKey: string
+): string => {
+	return AES.decrypt(message, encKey).toString(enc.Utf8);
+};
+
 export const saveMessageOnIPFS = async (
 	sender: string,
 	receiver: string,
 	subject: string,
 	message: string
 ): Promise<any> => {
-	console.log({ sender, receiver });
 	const [senderPubEncKey, receiverPubEncKey] = await contract().getPubEncKeys(
 		receiver
 	);
@@ -78,6 +127,7 @@ export const saveMessageOnIPFS = async (
 
 	const encryptionKey = uuid();
 	const encryptedData = AES.encrypt(dataToEncrypt, encryptionKey).toString();
+	const decryptedData = AES.decrypt(dataToEncrypt, encryptionKey).toString();
 
 	const senderPubKeyEnc = await encryptMessage(
 		encryptionKey,
@@ -89,9 +139,7 @@ export const saveMessageOnIPFS = async (
 		receiverPubEncKey
 	);
 
-	const formattedData = JSON.stringify(encryptedData);
-
-	const ipfsHash = await uploadToIPFS(formattedData);
+	const ipfsHash = await uploadToIPFS(encryptedData);
 
 	const response = await contract().sendMessage(
 		0,
