@@ -79,7 +79,7 @@ function Account() {
 	return (
 		<>
 			<Menu as="div" className="relative inline-block text-left z-40">
-				<div>
+				<div className="flex items-center">
 					<div className=" cursor-default inline-flex justify-center items-center space-x-2 w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 bg-transparent text-primaryText text-sm font-medium">
 						{!!avatar && (
 							<img src={avatar} className="h-6 w-6 rounded-lg" />
@@ -89,9 +89,25 @@ function Account() {
 							{ensAddress || getEllipsisTxt(account, 6)}
 						</p>
 					</div>
-					{/* <div className="bg-gray-50 rounded-md" onClick={logout}>
-						SIGN OUT
-					</div> */}
+					<div
+						className=" text-primaryText rounded-md ml-4 cursor-pointer"
+						onClick={logout}
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							className="h-8 w-8"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={2}
+								d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+							/>
+						</svg>
+					</div>
 				</div>
 
 				<Transition

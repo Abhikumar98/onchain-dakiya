@@ -85,7 +85,7 @@ const Dashboard: React.FC = () => {
 			) : (
 				<>
 					{!onboarded && (
-						<div className="w-2/5 bg-primaryBackground rounded-md p-4 space-y-4 text-primaryText text-xl break-all m-auto flex justify-center flex-col items-center my-8">
+						<div className="w-2/5 bg-primaryBackground rounded-md p-4 space-y-4 text-primaryText text-xl break-words m-auto flex justify-center flex-col items-center my-8">
 							<Lock />
 							<div>
 								Hurray 🎉, You have successfully made it! Now we
@@ -102,30 +102,30 @@ const Dashboard: React.FC = () => {
 							</Button>
 						</div>
 					)}
-					<div className="flex space-x-8 w-full">
-						<div
-							className={`text-primaryText text-lg border-b-4 pb-1 px-8 cursor-pointer ${
-								tab === "inbox"
-									? " border-primary "
-									: " border-transparent "
-							}`}
-							onClick={() => setTab("inbox")}
-						>
-							Inbox
-						</div>
-						<div
-							className={`text-primaryText text-lg border-b-4 pb-1 px-8 cursor-pointer ${
-								tab === "sent"
-									? " border-primary "
-									: " border-transparent "
-							}`}
-							onClick={() => setTab("sent")}
-						>
-							Sent
-						</div>
-					</div>
-					{onboarded && (
+					{!!onboarded && (
 						<>
+							<div className="flex space-x-8 w-full">
+								<div
+									className={`text-primaryText text-lg border-b-4 pb-1 px-8 cursor-pointer ${
+										tab === "inbox"
+											? " border-primary "
+											: " border-transparent "
+									}`}
+									onClick={() => setTab("inbox")}
+								>
+									Inbox
+								</div>
+								<div
+									className={`text-primaryText text-lg border-b-4 pb-1 px-8 cursor-pointer ${
+										tab === "sent"
+											? " border-primary "
+											: " border-transparent "
+									}`}
+									onClick={() => setTab("sent")}
+								>
+									Sent
+								</div>
+							</div>
 							{tab === "inbox" ? (
 								<InboxThreads />
 							) : (
