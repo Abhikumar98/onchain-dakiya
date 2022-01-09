@@ -43,6 +43,7 @@ module.exports = {
 			secondaryText: "#A9A9B7",
 			messageHover: "#40404a",
 			landing: "#101013",
+			primary: "#FF7A2F",
 			"heading-color": "var(--heading-color)",
 		},
 	},

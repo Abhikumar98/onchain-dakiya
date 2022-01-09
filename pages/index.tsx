@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
-import ThreadComponent from "../components/ThreadComponent";
 import EmptyThreads from "../components/EmptyThreads";
 import { Lock } from "../components/Icons";
-import SearchBar from "../components/SearchBar";
+import InboxThreads from "../components/InboxThreads";
+import SentThreads from "../components/SentThreads";
 import { EmailThread } from "../contracts";
 import { useMoralisData } from "../hooks/useMoralisData";
 import { minimizeAddress } from "../utils";
@@ -16,10 +16,9 @@ declare let window: any;
 const Dashboard: React.FC = () => {
 	const { account } = useMoralisData();
 
-	const [emails, setEmails] = React.useState<EmailThread[]>([]);
+	const [tab, setTab] = useState<"inbox" | "sent">("inbox");
 	const [onboarding, setOnboarding] = React.useState<boolean>(false);
 	const [onboarded, setOnboarded] = React.useState<boolean>(false);
-	const [loading, setLoading] = React.useState<boolean>(false);
 
 	const checkIfOnboarded = async (address: string) => {
 		try {
@@ -50,45 +49,17 @@ const Dashboard: React.FC = () => {
 		}
 	};
 
-	const queryMails = async () => {
-		try {
-			setLoading(true);
-			const response = await getAllUserThreads(account);
-
-			const cleanedEmails = response
-				?.map((email: any) => {
-					const { _receiver, _sender, _thread_id, _timestamp } =
-						email;
-
-					const newEmail: EmailThread = {
-						thread_id: _thread_id.toString(),
-						receiver: _receiver.toString(),
-						sender: minimizeAddress(_sender.toString()),
-						timestamp: Number(_timestamp.toString()) * 1000,
-					};
-
-					return newEmail;
-				})
-				?.sort((a, b) => b.timestamp - a.timestamp);
-
-			setEmails(cleanedEmails);
-		} catch (error) {
-			console.error(error);
-		} finally {
-			setLoading(false);
-		}
-	};
-
 	useEffect(() => {
 		if (account) {
-			queryMails();
 			checkIfOnboarded(account);
 		}
 	}, [account]);
 
+	console.log({ tab });
+
 	return (
 		<div className="space-y-4 relative w-full">
-			{loading || onboarding ? (
+			{onboarding ? (
 				<div className="w-full flex justify-center my-12">
 					<svg
 						className="animate-spin -ml-1 mr-3 h-12 w-12 text-primaryText"
@@ -131,20 +102,38 @@ const Dashboard: React.FC = () => {
 							</Button>
 						</div>
 					)}
+					<div className="flex space-x-8 w-full">
+						<div
+							className={`text-primaryText text-lg border-b-4 pb-1 px-8 cursor-pointer ${
+								tab === "inbox"
+									? " border-primary "
+									: " border-transparent "
+							}`}
+							onClick={() => setTab("inbox")}
+						>
+							Inbox
+						</div>
+						<div
+							className={`text-primaryText text-lg border-b-4 pb-1 px-8 cursor-pointer ${
+								tab === "sent"
+									? " border-primary "
+									: " border-transparent "
+							}`}
+							onClick={() => setTab("sent")}
+						>
+							Sent
+						</div>
+					</div>
 					{onboarded && (
 						<>
-							<SearchBar />
-							{emails.map((email) => (
-								<ThreadComponent
-									key={email.thread_id}
-									email={email}
-								/>
-							))}
+							{tab === "inbox" ? (
+								<InboxThreads />
+							) : (
+								<SentThreads />
+							)}
 						</>
 					)}
-					{!!onboarded && !onboarding && !emails.length && (
-						<EmptyThreads />
-					)}
+					{/* {!!onboarded && !onboarding && <EmptyThreads />} */}
 				</>
 			)}
 		</div>

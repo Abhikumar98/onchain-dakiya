@@ -10,9 +10,7 @@ const EmptyThreads = () => {
 				There is no Dak in the mail ! Send your first Dak by clicking
 				Send Dak button.
 			</div>
-			<Button className="justify-center" fullWidth>
-				Send Dak
-			</Button>
+			<div>Click on "Send Dak" to send a new Dak</div>
 		</div>
 	);
 };

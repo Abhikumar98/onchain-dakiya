@@ -47,6 +47,27 @@ export const getAllUserThreads = async (address: string): Promise<any> => {
 
 	return response.data.data.threads;
 };
+
+export const getAllUserSentThreads = async (address: string): Promise<any> => {
+	if (!address) return null;
+
+	const response = await axios.post(
+		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
+		{
+			query: `{
+                threads(first: ${50}, where: { _sender: "${address}" }) {
+                    id
+                    _receiver
+					_sender
+					_thread_id
+					_timestamp
+                }
+        }`,
+		}
+	);
+
+	return response.data.data.threads;
+};
 export const getThread = async (threadId: string): Promise<any> => {
 	const response = await axios.post(
 		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
