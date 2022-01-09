@@ -186,6 +186,29 @@ export const threadReply = async (
 	);
 };
 
+export const getLatestMessage = async (threadId: string): Promise<any> => {
+	const response = await axios.post(
+		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
+		{
+			query: `{
+					messages(
+						where:{ _thread_id: ${threadId} },
+						orderBy:_timestamp,
+						orderDirection: desc,
+						first:1) {
+							id
+							_receiver
+							_uri
+							_timestamp
+						}
+					}
+
+		`,
+		}
+	);
+	return response.data.data.messages[0];
+};
+
 /**
  * {
     "ipfsHash": "Qmf54WzpBHrQB7Eisk6GrYveovtfAXswhxSFAr7MWy3KKg",

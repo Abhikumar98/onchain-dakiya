@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
-import EmailComponent from "../components/EmailComponent";
+import ThreadComponent from "../components/ThreadComponent";
 import EmptyThreads from "../components/EmptyThreads";
 import { Lock } from "../components/Icons";
 import SearchBar from "../components/SearchBar";
@@ -16,21 +16,23 @@ declare let window: any;
 const Dashboard: React.FC = () => {
 	const { account } = useMoralisData();
 
-	// state to store Email data
 	const [emails, setEmails] = React.useState<EmailThread[]>([]);
-	// onboarding state
 	const [onboarding, setOnboarding] = React.useState<boolean>(false);
-	// onboarded state
 	const [onboarded, setOnboarded] = React.useState<boolean>(false);
+	const [loading, setLoading] = React.useState<boolean>(false);
 
 	const checkIfOnboarded = async (address: string) => {
 		try {
+			setOnboarding(true);
+
 			const response = await contract().checkUserRegistration();
 
 			setOnboarded(!!response);
 		} catch (error) {
 			console.error(error);
 			toast.error(error.message ?? "Something went wrong");
+		} finally {
+			setOnboarding(false);
 		}
 	};
 
@@ -50,6 +52,7 @@ const Dashboard: React.FC = () => {
 
 	const queryMails = async () => {
 		try {
+			setLoading(true);
 			const response = await getAllUserThreads(account);
 
 			const cleanedEmails = response
@@ -71,6 +74,8 @@ const Dashboard: React.FC = () => {
 			setEmails(cleanedEmails);
 		} catch (error) {
 			console.error(error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -83,32 +88,65 @@ const Dashboard: React.FC = () => {
 
 	return (
 		<div className="space-y-4 relative w-full">
-			{!onboarded && (
-				<div className="w-2/5 bg-primaryBackground rounded-md p-4 space-y-4 text-primaryText text-xl break-all m-auto flex justify-center flex-col items-center my-8">
-					<Lock />
-					<div>
-						Hurray 🎉, You have successfully made it! Now we just
-						need password encryption key to get you started.
-					</div>
-					<Button
-						loading={onboarding}
-						onClick={onboardUser}
-						className="justify-center"
-						fullWidth
+			{loading || onboarding ? (
+				<div className="w-full flex justify-center my-12">
+					<svg
+						className="animate-spin -ml-1 mr-3 h-12 w-12 text-primaryText"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
 					>
-						Let's get started
-					</Button>
+						<circle
+							className="opacity-25"
+							cx="12"
+							cy="12"
+							r="10"
+							stroke="currentColor"
+							stroke-width="4"
+						></circle>
+						<path
+							className="opacity-75"
+							fill="currentColor"
+							d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+						></path>
+					</svg>
 				</div>
-			)}
-			{onboarded && (
+			) : (
 				<>
-					<SearchBar />
-					{emails.map((email) => (
-						<EmailComponent key={email.thread_id} email={email} />
-					))}
+					{!onboarded && (
+						<div className="w-2/5 bg-primaryBackground rounded-md p-4 space-y-4 text-primaryText text-xl break-all m-auto flex justify-center flex-col items-center my-8">
+							<Lock />
+							<div>
+								Hurray 🎉, You have successfully made it! Now we
+								just need password encryption key to get you
+								started.
+							</div>
+							<Button
+								loading={onboarding}
+								onClick={onboardUser}
+								className="justify-center"
+								fullWidth
+							>
+								Let's get started
+							</Button>
+						</div>
+					)}
+					{onboarded && (
+						<>
+							<SearchBar />
+							{emails.map((email) => (
+								<ThreadComponent
+									key={email.thread_id}
+									email={email}
+								/>
+							))}
+						</>
+					)}
+					{!!onboarded && !onboarding && !emails.length && (
+						<EmptyThreads />
+					)}
 				</>
 			)}
-			{!!onboarded && !onboarding && !emails.length && <EmptyThreads />}
 		</div>
 	);
 };

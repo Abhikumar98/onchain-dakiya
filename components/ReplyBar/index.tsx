@@ -20,9 +20,11 @@ const ReplyBar = ({
 }) => {
 	const toastId = useRef(null);
 	const [message, setMessage] = React.useState<string>("");
+	const [loading, setLoading] = React.useState<boolean>(false);
 
 	const handleSend = async () => {
 		try {
+			setLoading(true);
 			await threadReply(
 				receiver,
 				message,
@@ -34,6 +36,7 @@ const ReplyBar = ({
 			toastId.current = toast.loading("Sending message", {
 				position: "bottom-left",
 			});
+			setMessage("");
 			listenEvents().on("MessageSent", (...params) => {
 				toast.update(toastId.current, {
 					type: toast.TYPE.SUCCESS,
@@ -46,6 +49,8 @@ const ReplyBar = ({
 		} catch (error) {
 			console.error(error);
 			toast.error(error.message ?? "Something went wrong");
+		} finally {
+			setLoading(false);
 		}
 	};
 	return (
@@ -57,10 +62,9 @@ const ReplyBar = ({
 				name="reply"
 				id="reply"
 				className="shadow-sm block w-full sm:text-sm border-transparent bg-messageHover rounded-md text-primaryText"
-				defaultValue={""}
-				placeholder="Add message"
+				placeholder="Reply to thread"
 			/>
-			<Button onClick={handleSend} icon={<Send />} />
+			<Button loading={loading} onClick={handleSend} icon={<Send />} />
 		</div>
 	);
 };

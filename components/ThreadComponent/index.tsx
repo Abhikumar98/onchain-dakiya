@@ -8,14 +8,16 @@ import moment from "moment";
 import { minimizeAddress } from "../../utils";
 import { fetchFromIPFS } from "../../utils/crypto";
 import { toast } from "react-toastify";
+import { getLatestMessage } from "../../utils/queries";
 
-const EmailComponent = ({ email }: { email: EmailThread }) => {
+const ThreadComponent = ({ email }: { email: EmailThread }) => {
 	const router = useRouter();
 	const { name, address, avatar } = useEnsAddress(email.sender);
 
 	const [loading, setLoading] = React.useState(false);
 	const [message, setMessage] = React.useState<string>("");
 	const [subject, setSubject] = React.useState<string>("");
+	const [timestamp, setTimestamp] = React.useState<number | null>(null);
 
 	const handleRoute = () => {
 		router.push(`/${email.thread_id}`);
@@ -24,12 +26,8 @@ const EmailComponent = ({ email }: { email: EmailThread }) => {
 	const resolveIPFS = async () => {
 		try {
 			setLoading(true);
-			// const result = await fetchFromIPFS(email.uri);
-			// const parsedResult = JSON.parse(result);
-			// const data = JSON.parse(parsedResult.data);
-			// console.log({ ...data });
-			// setMessage(data.message);
-			// setSubject(data.subject);
+			const response = await getLatestMessage(email.thread_id);
+			setTimestamp(Number(response._timestamp) * 1000);
 		} catch (error) {
 			console.error(error);
 			toast.error(error.message ?? "Something went wrong");
@@ -63,22 +61,22 @@ const EmailComponent = ({ email }: { email: EmailThread }) => {
 						{name ?? minimizeAddress(address ?? email.sender)}
 					</div>
 					<div className="text-xs sm:text-sm md:text-base text-secondaryText">
-						{human(moment(email.timestamp).toDate())}
+						{human(moment(timestamp ?? email.timestamp).toDate())}
 					</div>
 				</div>
 				<div className=" text-primaryText font-semibold text-sm sm:text-base md:text-lg mt-3">
-					{loading
+					{/* {loading
 						? "loading..."
-						: subject ?? "Prolly invalid subject"}
+						: subject ?? "Prolly invalid subject"} */}
 				</div>
 				<div className=" text-secondaryText text-xs sm:text-sm md:text-base mt-1">
-					{loading
+					{/* {loading
 						? "loading..."
-						: message ?? "Prolly invalid message"}
+						: message ?? "Prolly invalid message"} */}
 				</div>
 			</div>
 		</div>
 	);
 };
 
-export default EmailComponent;
+export default ThreadComponent;

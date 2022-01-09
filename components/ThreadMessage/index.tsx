@@ -6,6 +6,7 @@ import human from "human-time";
 import { toast } from "react-toastify";
 import { decryptCipherMessage } from "../../utils/queries";
 import { fetchFromIPFS } from "../../utils/crypto";
+import { useEnsAddress } from "../../utils/useEnsAddress";
 
 const ThreadMessage = ({
 	message,
@@ -14,7 +15,7 @@ const ThreadMessage = ({
 	message: Message;
 	encKey: string;
 }) => {
-	// decrypted message state
+	const { name, address, avatar } = useEnsAddress(message.sender);
 	const [decryptedMessage, setDecryptedMessage] = React.useState<string>("");
 
 	const decryptMessage = async () => {
@@ -37,7 +38,7 @@ const ThreadMessage = ({
 		<div className="p-4 rounded-md bg-primaryBackground hover:bg-messageHover transition-all ease-in-out my-4">
 			<div className="title space-x-4 flex items-center">
 				<div className=" text-primaryText text-base md:text-xl font-semibold">
-					{minimizeAddress(message.sender)}
+					{name ?? minimizeAddress(message.sender)}
 				</div>
 				<div className=" text-secondaryText text-xs md:text-sm ml-4 flex items-center">
 					<span className=" font-bold mr-4">&bull;</span>

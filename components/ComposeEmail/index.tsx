@@ -20,11 +20,19 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 	const [to, setTo] = useState("");
 	const [subject, setSubject] = useState("");
 	const [body, setBody] = useState("");
+	const [loading, setLoading] = useState<boolean>(false);
 
+	const handleClose = () => {
+		setTo("");
+		setSubject("");
+		setBody("");
+		onClose();
+	};
 	const handleSendEmail = async () => {
 		try {
+			setLoading(true);
 			await saveMessageOnIPFS(account, to, subject, body);
-			onClose();
+			handleClose();
 			toastId.current = toast.loading("Sending message", {
 				position: "bottom-left",
 			});
@@ -40,6 +48,8 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 		} catch (error) {
 			console.error(error);
 			toast.error(error.message ?? "Something went wrong");
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -52,7 +62,7 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 			<Dialog
 				as="div"
 				className="fixed z-10 inset-0 overflow-y-auto"
-				onClose={onClose}
+				onClose={handleClose}
 			>
 				<div className="flex items-end justify-end min-h-screen pt-4 px-4 pb-4 text-center">
 					<Transition.Child
@@ -133,6 +143,7 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 									/>
 								</div>
 								<Button
+									loading={loading}
 									fullWidth
 									className="justify-center"
 									icon={<Send />}
