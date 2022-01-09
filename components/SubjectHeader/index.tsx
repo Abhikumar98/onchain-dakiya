@@ -2,6 +2,7 @@ import { ArrowSmLeftIcon } from "@heroicons/react/solid";
 import { useRouter } from "next/router";
 import React from "react";
 import { minimizeAddress } from "../../utils";
+import { useEnsAddress } from "../../utils/useEnsAddress";
 
 const SubjectHeader = ({
 	subject,
@@ -10,6 +11,7 @@ const SubjectHeader = ({
 	subject: string;
 	sender: string;
 }) => {
+	const { name, avatar } = useEnsAddress(sender);
 	const router = useRouter();
 
 	const handleGoBack = () => {
@@ -28,8 +30,13 @@ const SubjectHeader = ({
 						{subject}
 					</div>
 					<div className="mr-4 mt-2 md:mt-0 text-primaryText flex items-center space-x-2 md:space-x-2 text-xs md:text-base">
-						<div className="bg-blue-500 rounded-full h-6 w-6 md:h-8 md:w-8 "></div>
-						<div>{minimizeAddress(sender)}</div>
+						{avatar && (
+							<img
+								src={avatar}
+								className="rounded-full h-6 w-6 md:h-8 md:w-8 "
+							/>
+						)}
+						<div>{name ?? minimizeAddress(sender)}</div>
 					</div>
 				</div>
 			</div>
