@@ -44,7 +44,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 					<Component {...pageProps} />
 				</div>
 			</AuthWrapper>
-			<ToastContainer />
+			<ToastContainer position="bottom-left" />
 			<ReactTooltip effect="solid" />
 		</MoralisProvider>
 	);

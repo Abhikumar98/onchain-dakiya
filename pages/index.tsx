@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { toast } from "react-toastify";
 import Button from "../components/Button";
 import EmailComponent from "../components/EmailComponent";
 import SearchBar from "../components/SearchBar";
@@ -25,6 +26,7 @@ const Dashboard: React.FC = () => {
 			setOnboarded(!!response);
 		} catch (error) {
 			console.error(error);
+			toast.error(error.message ?? "Something went wrong");
 		}
 	};
 
@@ -35,6 +37,7 @@ const Dashboard: React.FC = () => {
 			setOnboarded(true);
 		} catch (error) {
 			console.error(error);
+			toast.error(error.message ?? "Something went wrong");
 		}
 	};
 

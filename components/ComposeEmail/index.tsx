@@ -40,6 +40,7 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 			});
 		} catch (error) {
 			console.error(error);
+			toast.error(error.message ?? "Something went wrong");
 		}
 	};
 

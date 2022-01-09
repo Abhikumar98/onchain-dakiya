@@ -7,6 +7,7 @@ import human from "human-time";
 import moment from "moment";
 import { minimizeAddress } from "../../utils";
 import { fetchFromIPFS } from "../../utils/crypto";
+import { toast } from "react-toastify";
 
 const EmailComponent = ({ email }: { email: Email }) => {
 	const router = useRouter();
@@ -31,6 +32,7 @@ const EmailComponent = ({ email }: { email: Email }) => {
 			setSubject(data.subject);
 		} catch (error) {
 			console.error(error);
+			toast.error(error.message ?? "Something went wrong");
 		} finally {
 			setLoading(false);
 		}
