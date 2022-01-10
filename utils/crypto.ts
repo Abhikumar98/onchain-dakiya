@@ -184,7 +184,7 @@ export const listenEvents = () => {
 	const { ethereum } = window;
 	if (ethereum) {
 		const contractReader = new ethers.Contract(
-			"0xdC6d44BFea70D9B5DeD61Bdb59c052F16B72F1f0",
+			"0x91f44dda49a34ebed98e35211aeaf0719860bc68",
 			abi,
 			provider
 		);
@@ -199,7 +199,7 @@ export const contract = () => {
 	if (ethereum) {
 		const signer = provider.getSigner();
 		const contractReader = new ethers.Contract(
-			"0xdC6d44BFea70D9B5DeD61Bdb59c052F16B72F1f0",
+			"0x91f44dda49a34ebed98e35211aeaf0719860bc68",
 			abi,
 			signer
 		);
@@ -217,8 +217,6 @@ export const getPublicEncryptionKey = async (
 			method: "eth_getEncryptionPublicKey",
 			params: [account],
 		});
-
-		console.log(pubEncryptionKey);
 
 		return pubEncryptionKey;
 	}

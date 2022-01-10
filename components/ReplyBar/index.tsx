@@ -11,12 +11,14 @@ const ReplyBar = ({
 	threadId,
 	senderPubEncKey,
 	receiverPubEncKey,
+	encrypted,
 }: {
 	receiver: string;
 	encryptionKey: string;
 	threadId: string;
 	senderPubEncKey: string;
 	receiverPubEncKey: string;
+	encrypted: boolean;
 }) => {
 	const toastId = useRef(null);
 	const [message, setMessage] = React.useState<string>("");
@@ -31,7 +33,8 @@ const ReplyBar = ({
 				threadId,
 				encryptionKey,
 				senderPubEncKey,
-				receiverPubEncKey
+				receiverPubEncKey,
+				encrypted
 			);
 			toastId.current = toast.loading("Sending message", {
 				position: "bottom-left",

@@ -33,6 +33,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 	// separate state for sender_key receiver_key
 	const [senderKey, setSenderKey] = useState<string>("");
 	const [receiverKey, setReceiverKey] = useState<string>("");
+	const [encrypted, setEncrypted] = useState<boolean>(false);
 
 	// subject state
 	const [subject, setSubject] = useState<string>("");
@@ -95,8 +96,33 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 					return newMessage;
 				})
 				.sort((a, b) => a.timestamp - b.timestamp);
-			console.log(cleanedMessages[0]);
-			if (!encryptionKey) {
+
+			const ipfsMessage = await fetchFromIPFS(cleanedMessages?.[0]?.uri);
+			const isOpenMessage =
+				ipfsMessage.startsWith("{") && ipfsMessage.endsWith("}");
+			let parsedData: any = {};
+
+			try {
+				console.log("hereerere");
+				if (isOpenMessage) {
+					console.log("inside doing the parsing");
+					setEncrypted(false);
+					parsedData = JSON.parse(ipfsMessage);
+				}
+			} catch (error) {
+				console.log("coming here");
+				// ignore if not json
+			}
+
+			console.log({ parsedData });
+
+			if (isOpenMessage) {
+				setSubject(parsedData?.subject ?? "");
+			}
+
+			if (!encryptionKey && !isOpenMessage) {
+				console.log("Permission to get public encryption key");
+				setEncrypted(true);
 				if (cleanedMessages[0].sender === account) {
 					const decryptedEncKey = await decryptEncrytionKey(
 						_sender_key
@@ -144,6 +170,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 				/>
 				{messages.map((message) => (
 					<ThreadMessage
+						encrypted={encrypted}
 						encKey={encryptionKey}
 						key={message.txId}
 						message={message}
@@ -155,6 +182,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 					threadId={threadId}
 					senderPubEncKey={senderKey}
 					receiverPubEncKey={receiverKey}
+					encrypted={encrypted}
 				/>
 			</div>
 		</>

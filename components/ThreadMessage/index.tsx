@@ -11,9 +11,11 @@ import { useEnsAddress } from "../../utils/useEnsAddress";
 const ThreadMessage = ({
 	message,
 	encKey,
+	encrypted,
 }: {
 	message: Message;
 	encKey: string;
+	encrypted: boolean;
 }) => {
 	const { name, address, avatar } = useEnsAddress(message.sender);
 	const [decryptedMessage, setDecryptedMessage] = React.useState<string>("");
@@ -21,7 +23,11 @@ const ThreadMessage = ({
 	const decryptMessage = async () => {
 		try {
 			const ipfsMessage = await fetchFromIPFS(message.uri);
-			const decryptedString = decryptCipherMessage(ipfsMessage, encKey);
+			const decryptedString = encrypted
+				? decryptCipherMessage(ipfsMessage, encKey)
+				: ipfsMessage;
+
+			console.log({ decryptedString });
 			const parsedData = JSON.parse(decryptedString);
 			setDecryptedMessage(parsedData.message);
 		} catch (error) {

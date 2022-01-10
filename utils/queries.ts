@@ -144,28 +144,35 @@ export const saveMessageOnIPFS = async (
 	const dataToEncrypt = JSON.stringify({
 		message,
 		subject,
+		encrypted: !!receiverPubEncKey,
 	});
 
 	const encryptionKey = uuid();
-	const encryptedData = AES.encrypt(dataToEncrypt, encryptionKey).toString();
+	const encryptedData = !!receiverPubEncKey
+		? AES.encrypt(dataToEncrypt, encryptionKey).toString()
+		: dataToEncrypt;
 
-	const senderPubKeyEnc = await encryptMessage(
-		encryptionKey,
-		senderPubEncKey
-	);
+	const senderPubKeyEnc = !!receiverPubEncKey
+		? await encryptMessage(encryptionKey, senderPubEncKey)
+		: "";
 
-	const receiverPubKeyEnc = await encryptMessage(
-		encryptionKey,
-		receiverPubEncKey
-	);
+	const receiverPubKeyEnc = !!receiverPubEncKey
+		? await encryptMessage(encryptionKey, receiverPubEncKey)
+		: "";
 
 	const ipfsHash = await uploadToIPFS(encryptedData);
+
 	console.log({
 		ipfsHash,
 		receiver,
+		senderPubEncKey,
+		receiverPubEncKey,
 		senderPubKeyEnc,
 		receiverPubKeyEnc,
+		a: receiverPubEncKey,
+		encryptedData,
 	});
+
 	const response = await contract().sendMessage(
 		0,
 		ipfsHash,
@@ -182,12 +189,15 @@ export const threadReply = async (
 	threadId: string,
 	encryptionKey: string,
 	senderPubEncKey: string,
-	receiverPubEncKey: string
+	receiverPubEncKey: string,
+	encrypt: boolean
 ) => {
 	const dataToEncrypt = JSON.stringify({
 		message,
 	});
-	const encryptedData = AES.encrypt(dataToEncrypt, encryptionKey).toString();
+	const encryptedData = encrypt
+		? AES.encrypt(dataToEncrypt, encryptionKey).toString()
+		: dataToEncrypt;
 	const ipfsHash = await uploadToIPFS(encryptedData);
 
 	console.log({
