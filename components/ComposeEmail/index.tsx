@@ -1,12 +1,13 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Dialog, Transition } from "@headlessui/react";
-import { FC, Fragment, useRef, useState } from "react";
+import { FC, Fragment, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import ReactTooltip from "react-tooltip";
 import { useMoralisData } from "../../hooks/useMoralisData";
 import { listenEvents } from "../../utils/crypto";
 import { saveMessageOnIPFS } from "../../utils/queries";
 import Button from "../Button";
-import { Send } from "../Icons";
+import { Send, Shield } from "../Icons";
 
 interface IComposeEmail {
 	readonly open: boolean;
@@ -56,6 +57,10 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 	toast.update("e4jstyb3t", {
 		type: "success",
 	});
+
+	useEffect(() => {
+		ReactTooltip.rebuild();
+	}, [open]);
 
 	return (
 		<Transition.Root show={open} as={Fragment}>
@@ -115,6 +120,12 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 										className="block w-full pl-12 sm:pl-14 sm:text-sm border-transparent bg-messageHover rounded-md"
 										placeholder="Address or ens"
 									/>
+									{/* <div
+										className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+										data-tip="Unsecure"
+									>
+										<Shield />
+									</div> */}
 								</div>
 								<div className="mt-1 relative rounded-md shadow-sm">
 									<input

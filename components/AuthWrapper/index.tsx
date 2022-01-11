@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { toast } from "react-toastify";
+import ReactTooltip from "react-tooltip";
 import { useMoralisData } from "../../hooks/useMoralisData";
 import { handleAuth } from "../../utils/crypto";
 import Button from "../Button";
@@ -24,7 +25,10 @@ const AuthWrapper: FC = ({ children }) => {
 	};
 
 	return account ? (
-		<>{children}</>
+		<>
+			{children}
+			<ReactTooltip id="tooltip" />
+		</>
 	) : (
 		<div className="flex items-center flex-col justify-between h-screen w-screen bg-landing overflow-hidden">
 			<div className="mt-24 flex items-center flex-col">

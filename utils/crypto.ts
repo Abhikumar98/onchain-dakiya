@@ -152,7 +152,9 @@ export const validateAndResolveAddress = async (
 
 			if (!ensResolver) {
 				// toast.error("This address is not valid");
-				throw new Error("This address is not valid");
+				// throw new Error("This address is not valid");
+				console.warn("No ens resolver found for this address");
+				return;
 			}
 
 			address = ensResolver;
@@ -184,7 +186,7 @@ export const listenEvents = () => {
 	const { ethereum } = window;
 	if (ethereum) {
 		const contractReader = new ethers.Contract(
-			"0x91f44dda49a34ebed98e35211aeaf0719860bc68",
+			"0x1162438e2176bef9DaD7E530Be74A2b1183933e0",
 			abi,
 			provider
 		);
@@ -199,7 +201,7 @@ export const contract = () => {
 	if (ethereum) {
 		const signer = provider.getSigner();
 		const contractReader = new ethers.Contract(
-			"0x91f44dda49a34ebed98e35211aeaf0719860bc68",
+			"0x1162438e2176bef9DaD7E530Be74A2b1183933e0",
 			abi,
 			signer
 		);

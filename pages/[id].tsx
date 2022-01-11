@@ -165,6 +165,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 		<>
 			<div className="relative">
 				<SubjectHeader
+					encrypted={encrypted}
 					subject={subject}
 					sender={messages?.[0]?.sender ?? ""}
 				/>
