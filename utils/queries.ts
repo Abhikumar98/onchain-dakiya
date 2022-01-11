@@ -40,6 +40,7 @@ export const getAllUserThreads = async (address: string): Promise<any> => {
 					_sender
 					_thread_id
 					_timestamp
+					encrypted
                 }
         }`,
 		}
@@ -61,6 +62,7 @@ export const getAllUserSentThreads = async (address: string): Promise<any> => {
 					_sender
 					_thread_id
 					_timestamp
+					encrypted
                 }
         }`,
 		}
@@ -81,6 +83,7 @@ export const getThread = async (threadId: string): Promise<any> => {
 					_timestamp
 					_sender_key
 					_receiver_key
+					encrypted
                 }
         }`,
 		}
@@ -178,7 +181,8 @@ export const saveMessageOnIPFS = async (
 		ipfsHash,
 		receiver,
 		senderPubKeyEnc,
-		receiverPubKeyEnc
+		receiverPubKeyEnc,
+		!!receiverPubEncKey
 	);
 	return response;
 };
@@ -213,7 +217,8 @@ export const threadReply = async (
 		ipfsHash,
 		receiver,
 		senderPubEncKey,
-		receiverPubEncKey
+		receiverPubEncKey,
+		encrypt
 	);
 };
 

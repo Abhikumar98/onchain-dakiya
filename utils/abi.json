@@ -74,6 +74,12 @@
 				"internalType": "string",
 				"name": "_receiver_key",
 				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "_encrypted",
+				"type": "bool"
 			}
 		],
 		"name": "ThreadCreated",
@@ -159,7 +165,8 @@
 				"internalType": "string",
 				"name": "_receiver_key",
 				"type": "string"
-			}
+			},
+			{ "internalType": "bool", "name": "encrypted", "type": "bool" }
 		],
 		"name": "sendMessage",
 		"outputs": [],
@@ -206,7 +213,12 @@
 				"type": "string"
 			},
 			{ "internalType": "address", "name": "sender", "type": "address" },
-			{ "internalType": "string", "name": "sender_key", "type": "string" }
+			{
+				"internalType": "string",
+				"name": "sender_key",
+				"type": "string"
+			},
+			{ "internalType": "bool", "name": "encrypted", "type": "bool" }
 		],
 		"stateMutability": "view",
 		"type": "function"

@@ -71,7 +71,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 		try {
 			const thread = await getThread(threadId);
 
-			const { _sender_key, _receiver_key } = thread;
+			const { _sender_key, _receiver_key, encrypted } = thread;
 
 			setSenderKey(_sender_key);
 			setReceiverKey(_receiver_key);
@@ -97,30 +97,16 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 				})
 				.sort((a, b) => a.timestamp - b.timestamp);
 
-			const ipfsMessage = await fetchFromIPFS(cleanedMessages?.[0]?.uri);
-			const isOpenMessage =
-				ipfsMessage.startsWith("{") && ipfsMessage.endsWith("}");
-			let parsedData: any = {};
-
-			try {
-				console.log("hereerere");
-				if (isOpenMessage) {
-					console.log("inside doing the parsing");
-					setEncrypted(false);
-					parsedData = JSON.parse(ipfsMessage);
-				}
-			} catch (error) {
-				console.log("coming here");
-				// ignore if not json
+			if (!encrypted) {
+				setEncrypted(false);
+				const ipfsMessage = await fetchFromIPFS(
+					cleanedMessages[0]?.uri
+				);
+				const parsedData = JSON.parse(ipfsMessage);
+				setSubject(parsedData.subject);
 			}
 
-			console.log({ parsedData });
-
-			if (isOpenMessage) {
-				setSubject(parsedData?.subject ?? "");
-			}
-
-			if (!encryptionKey && !isOpenMessage) {
+			if (!encryptionKey && encrypted) {
 				console.log("Permission to get public encryption key");
 				setEncrypted(true);
 				if (cleanedMessages[0].sender === account) {
@@ -151,7 +137,11 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 	}, [threadId]);
 
 	useEffect(() => {
-		if (encryptionKey) {
+		if (encrypted) {
+			if (encryptionKey) {
+				getSubject();
+			}
+		} else {
 			getSubject();
 		}
 	}, [encryptionKey, messages]);

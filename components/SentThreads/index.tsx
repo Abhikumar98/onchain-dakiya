@@ -19,14 +19,20 @@ const SentThreads = () => {
 
 			const cleanedEmails = response
 				?.map((email: any) => {
-					const { _receiver, _sender, _thread_id, _timestamp } =
-						email;
+					const {
+						_receiver,
+						_sender,
+						_thread_id,
+						_timestamp,
+						encrypted,
+					} = email;
 
 					const newEmail: EmailThread = {
 						thread_id: _thread_id.toString(),
 						receiver: _receiver.toString(),
 						sender: minimizeAddress(_sender.toString()),
 						timestamp: Number(_timestamp.toString()) * 1000,
+						encrypted: encrypted,
 					};
 
 					return newEmail;
@@ -75,7 +81,11 @@ const SentThreads = () => {
 				<>
 					{!emails.length && <EmptyThreads />}
 					{emails.map((email) => (
-						<ThreadComponent receiverPin key={email.thread_id} email={email} />
+						<ThreadComponent
+							receiverPin
+							key={email.thread_id}
+							email={email}
+						/>
 					))}
 				</>
 			)}

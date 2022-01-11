@@ -3,6 +3,7 @@ export interface EmailThread {
 	readonly receiver: string;
 	readonly sender: string;
 	readonly timestamp: number;
+	readonly encrypted: boolean;
 }
 
 export class CreateEmail {

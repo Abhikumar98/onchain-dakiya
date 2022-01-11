@@ -8,6 +8,7 @@ import { minimizeAddress } from "../../utils";
 import { getLatestMessage } from "../../utils/queries";
 import { useEnsAddress } from "../../utils/useEnsAddress";
 import Blockie from "../Blockie";
+import { Shield } from "../Icons";
 
 const ThreadComponent = ({
 	email,
@@ -50,6 +51,8 @@ const ThreadComponent = ({
 	const receiver = receiverName ?? minimizeAddress(email.receiver);
 	const imageAvatar = receiverPin ? receiverAvatar : avatar;
 
+	console.log(email.encrypted);
+
 	return (
 		<div
 			onClick={handleRoute}
@@ -70,8 +73,17 @@ const ThreadComponent = ({
 					<div className=" text-primaryText text-base sm:text-lg md:text-xl font-semibold">
 						{receiverPin ? receiver : sender}
 					</div>
-					<div className="text-xs sm:text-sm md:text-base text-secondaryText">
-						{human(moment(timestamp ?? email.timestamp).toDate())}
+					<div className="text-xs sm:text-sm md:text-base text-secondaryText space-x-4 flex items-center">
+						<div>
+							{human(
+								moment(timestamp ?? email.timestamp).toDate()
+							)}
+						</div>
+						{!email.encrypted && (
+							<div>
+								<Shield />
+							</div>
+						)}
 					</div>
 				</div>
 				<div className=" text-primaryText font-semibold text-sm sm:text-base md:text-lg mt-3">
