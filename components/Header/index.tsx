@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { useChain } from "react-moralis";
 import Account from "../Account";
 import Button from "../Button";
 import { Logo, Send } from "../Icons";
@@ -14,7 +15,12 @@ declare let window: any;
 const Header = () => {
 	const [open, setOpen] = React.useState(false);
 
-	const router = useRouter();
+	const { chainId, switchNetwork } = useChain();
+
+	const requiredChain =
+		process.env.NODE_ENV === "development"
+			? chainId === "0x4"
+			: chainId === "0x1";
 
 	const showComposeEmailSection = () => {
 		setOpen(true);
@@ -34,12 +40,14 @@ const Header = () => {
 						</div>
 					</div>
 					<div className="flex space-x-6 items-center">
-						<Button
-							onClick={showComposeEmailSection}
-							icon={<Send />}
-						>
-							Send Dak
-						</Button>
+						{requiredChain && (
+							<Button
+								onClick={showComposeEmailSection}
+								icon={<Send />}
+							>
+								Send Dak
+							</Button>
+						)}
 						<Account />
 					</div>
 				</div>
