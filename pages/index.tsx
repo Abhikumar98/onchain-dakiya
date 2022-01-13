@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
-import EmptyThreads from "../components/EmptyThreads";
 import { Lock } from "../components/Icons";
 import InboxThreads from "../components/InboxThreads";
 import SentThreads from "../components/SentThreads";
-import { EmailThread } from "../contracts";
 import { useMoralisData } from "../hooks/useMoralisData";
-import { minimizeAddress } from "../utils";
 import { contract, getPublicEncryptionKey } from "../utils/crypto";
-import { getAllUserThreads } from "../utils/queries";
 
 declare let window: any;
 

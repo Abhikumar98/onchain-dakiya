@@ -1,8 +1,8 @@
-import { ethers } from "ethers";
-import abi from "./abi.json";
 import { encrypt } from "@metamask/eth-sig-util";
-import { AuthenticateOptions } from "react-moralis/lib/hooks/core/useMoralis/_useMoralisAuth";
+import { ethers } from "ethers";
 import { create } from "ipfs-http-client";
+import { AuthenticateOptions } from "react-moralis/lib/hooks/core/useMoralis/_useMoralisAuth";
+import abi from "./abi.json";
 
 declare let window: any;
 
