@@ -1,6 +1,9 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useChain } from "react-moralis";
 import { toast } from "react-toastify";
+import Button from "../components/Button";
+import { Warning } from "../components/Icons";
 import ReplyBar from "../components/ReplyBar";
 import SubjectHeader from "../components/SubjectHeader";
 import ThreadMessage from "../components/ThreadMessage";
@@ -37,6 +40,12 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 
 	// subject state
 	const [subject, setSubject] = useState<string>("");
+	const { chainId, switchNetwork } = useChain();
+
+	const requiredChain =
+		process.env.NODE_ENV === "development"
+			? chainId === "0x4"
+			: chainId === "0x1";
 
 	const decryptEncrytionKey = async (key: string): Promise<string> => {
 		try {
@@ -130,6 +139,12 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 		}
 	};
 
+	const switchETHNetwork = () => {
+		process.env.NODE_ENV === "development"
+			? switchNetwork("0x4")
+			: switchNetwork("0x1");
+	};
+
 	useEffect(() => {
 		if (threadId) {
 			getMessagesFromThread(String(threadId));
@@ -153,29 +168,51 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 
 	return (
 		<>
-			<div className="relative">
-				<SubjectHeader
-					encrypted={encrypted}
-					subject={subject}
-					sender={messages?.[0]?.sender ?? ""}
-				/>
-				{messages.map((message) => (
-					<ThreadMessage
-						encrypted={encrypted}
-						encKey={encryptionKey}
-						key={message.txId}
-						message={message}
-					/>
-				))}
-				<ReplyBar
-					receiver={receiver}
-					encryptionKey={encryptionKey}
-					threadId={threadId}
-					senderPubEncKey={senderKey}
-					receiverPubEncKey={receiverKey}
-					encrypted={encrypted}
-				/>
-			</div>
+			{!requiredChain ? (
+				<div className="w-96 bg-primaryBackground rounded-md p-4 space-y-4 text-primaryText text-xl break-words m-auto flex justify-center flex-col items-center my-8">
+					<Warning />
+					<div className="text-center">
+						You are not connected to Mainnet
+					</div>
+					<div className="text-sm text-center text-secondaryText">
+						Your wallet is connected to a different network. Please
+						switch to the Ethereum Mainnet to continue.
+					</div>
+					<Button
+						onClick={switchETHNetwork}
+						fullWidth
+						className="flex justify-center"
+					>
+						Switch Network
+					</Button>
+				</div>
+			) : (
+				<>
+					<div className="relative">
+						<SubjectHeader
+							encrypted={encrypted}
+							subject={subject}
+							sender={messages?.[0]?.sender ?? ""}
+						/>
+						{messages.map((message) => (
+							<ThreadMessage
+								encrypted={encrypted}
+								encKey={encryptionKey}
+								key={message.txId}
+								message={message}
+							/>
+						))}
+						<ReplyBar
+							receiver={receiver}
+							encryptionKey={encryptionKey}
+							threadId={threadId}
+							senderPubEncKey={senderKey}
+							receiverPubEncKey={receiverKey}
+							encrypted={encrypted}
+						/>
+					</div>
+				</>
+			)}
 		</>
 	);
 };
