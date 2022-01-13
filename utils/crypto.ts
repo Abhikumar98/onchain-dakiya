@@ -186,7 +186,7 @@ export const listenEvents = () => {
 	const { ethereum } = window;
 	if (ethereum) {
 		const contractReader = new ethers.Contract(
-			"0x491e4ca4ccaf70485296476e320fe3acc3e7f7b3",
+			"0x0761e0a5795be98fe806fa741a88f94ebec76c2b",
 			abi,
 			provider
 		);
@@ -201,7 +201,7 @@ export const contract = () => {
 	if (ethereum) {
 		const signer = provider.getSigner();
 		const contractReader = new ethers.Contract(
-			"0x491e4ca4ccaf70485296476e320fe3acc3e7f7b3",
+			"0x0761e0a5795be98fe806fa741a88f94ebec76c2b",
 			abi,
 			signer
 		);
