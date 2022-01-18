@@ -18,10 +18,7 @@ const Dashboard: React.FC = () => {
 	const [onboarded, setOnboarded] = React.useState<boolean>(false);
 	const { chainId, switchNetwork } = useChain();
 
-	const requiredChain =
-		process.env.NODE_ENV === "development"
-			? chainId === "0x4"
-			: chainId === "0x1";
+	const requiredChain = chainId === "0x4"
 
 	const checkIfOnboarded = async (address: string) => {
 		try {
