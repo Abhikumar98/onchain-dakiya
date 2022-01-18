@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { create } from "ipfs-http-client";
 import { AuthenticateOptions } from "react-moralis/lib/hooks/core/useMoralis/_useMoralisAuth";
 import abi from "./abi.json";
+import rinkebyAbi from "./rinkebyAbi.json";
 
 declare let window: any;
 
@@ -180,14 +181,23 @@ export const validateAndResolveAddress = async (
 	}
 };
 
+const rinkebyCheck =
+	process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_RINKEBY;
+
+const contractAddress = rinkebyCheck
+	? "0x355039B35222ea3E5eCbddfa0400BfC78E1ACEEf"
+	: "0x0761e0a5795be98fe806fa741a88f94ebec76c2b"; // eth mainnet
+
+const contractABI = rinkebyCheck ? rinkebyAbi : abi;
+
 export const listenEvents = () => {
 	const provider = new ethers.providers.Web3Provider(window.ethereum);
 
 	const { ethereum } = window;
 	if (ethereum) {
 		const contractReader = new ethers.Contract(
-			"0x0761e0a5795be98fe806fa741a88f94ebec76c2b",
-			abi,
+			contractAddress,
+			contractABI,
 			provider
 		);
 		return contractReader;
@@ -201,8 +211,8 @@ export const contract = () => {
 	if (ethereum) {
 		const signer = provider.getSigner();
 		const contractReader = new ethers.Contract(
-			"0x0761e0a5795be98fe806fa741a88f94ebec76c2b",
-			abi,
+			contractAddress,
+			contractABI,
 			signer
 		);
 		return contractReader;
