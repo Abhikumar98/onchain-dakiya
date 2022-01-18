@@ -42,10 +42,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 	const [subject, setSubject] = useState<string>("");
 	const { chainId, switchNetwork } = useChain();
 
-	const requiredChain =
-		process.env.NODE_ENV === "development"
-			? chainId === "0x4"
-			: chainId === "0x1";
+	const requiredChain = chainId === "0x4";
 
 	const decryptEncrytionKey = async (key: string): Promise<string> => {
 		try {
