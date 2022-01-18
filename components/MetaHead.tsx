@@ -22,7 +22,10 @@ const MetaHead: React.FC<MetaHeadProps> = ({ title, description, url }) => {
 			{/* add og tag */}
 			<meta property="og:title" content={title} />
 			<meta property="og:description" content={description} />
-			<meta property="og:image" content="/meta-background.png" />
+			<meta
+				property="og:image"
+				content="https://dakiya.xyz/ogimage.png"
+			/>
 			<meta property="og:url" content={url} />
 			<meta property="og:type" content="website" />
 			<meta property="og:site_name" content={title} />
