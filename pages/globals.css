@@ -22,3 +22,12 @@ div.embed-modal .ant-modal-header {
 
 .modal-dimensions {
 }
+
+.app-gradient {
+	background: linear-gradient(338.69deg, #ffa78f -24.42%, #f23e2c 103%);
+}
+
+.text-clip {
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}

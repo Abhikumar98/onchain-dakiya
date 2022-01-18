@@ -6,11 +6,11 @@ interface MetaHeadProps {
 	url?: string;
 }
 const MetaHead: React.FC<MetaHeadProps> = ({ title, description, url }) => {
-	title = title || "Send messages the secure way";
+	title = title || "Send a message to another user, on chain";
 	description =
 		description ||
-		"With Onchain Dakiya you can send messages to addresses with the security of blockchain.";
-	url = url || "https://onchain-dakiya.vercel.app/";
+		"Using dakiya you can send messages to anyone with a wallet address, without having to create an account or relying on email servers";
+	url = url || "https://dakiya.xyz";
 	return (
 		<Head>
 			<title>Onchain Dakiya</title>
@@ -36,7 +36,7 @@ const MetaHead: React.FC<MetaHeadProps> = ({ title, description, url }) => {
 			<meta name="twitter:description" content={description} />
 			<meta
 				name="twitter:image"
-				content="https://onchain-dakiya.vercel.app/ogimage.png"
+				content="https://dakiya.xyz/ogimage.png"
 			/>
 			<meta name="twitter:url" content={url} />
 			<link
