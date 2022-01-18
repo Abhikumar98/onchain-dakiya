@@ -29,6 +29,7 @@ const Dashboard: React.FC = () => {
 			setOnboarding(true);
 
 			const response = await contract().checkUserRegistration();
+			console.log({ response });
 
 			setOnboarded(!!response);
 		} catch (error) {

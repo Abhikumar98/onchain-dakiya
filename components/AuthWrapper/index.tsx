@@ -24,7 +24,7 @@ const AuthWrapper: FC = ({ children }) => {
 		}
 	};
 
-	return account ? (
+	return !account ? (
 		<>
 			{children}
 			<ReactTooltip id="tooltip" />
