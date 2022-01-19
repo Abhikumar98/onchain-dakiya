@@ -4,15 +4,18 @@ import { AES, enc } from "crypto-js";
 import { uuid } from "uuidv4";
 import { contract, encryptMessage, uploadToIPFS } from "./crypto";
 
+const graphEndpoint =
+	process.env.NEXT_PUBLIC_RINKEBY || process.env.NODE_ENV === "development"
+		? "https://api.thegraph.com/subgraphs/name/anoushk1234/dakiya-rinkeby"
+		: "https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya";
+
 export const fetchMessages = async (
 	account: string,
 	limit: number
 	// page: number
 ): Promise<any> => {
-	const response = await axios.post(
-		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
-		{
-			query: `{
+	const response = await axios.post(graphEndpoint, {
+		query: `{
                 messages(first: ${limit}) {
                     id
                     _receiver
@@ -21,8 +24,7 @@ export const fetchMessages = async (
 					_timestamp
                 }
         }`,
-		}
-	);
+	});
 
 	return response.data.data.messages;
 };
@@ -30,10 +32,8 @@ export const fetchMessages = async (
 export const getAllUserThreads = async (address: string): Promise<any> => {
 	if (!address) return null;
 
-	const response = await axios.post(
-		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
-		{
-			query: `{
+	const response = await axios.post(graphEndpoint, {
+		query: `{
                 threads(first: ${50}, where: { _receiver: "${address}" }) {
                     id
                     _receiver
@@ -43,8 +43,7 @@ export const getAllUserThreads = async (address: string): Promise<any> => {
 					encrypted
                 }
         }`,
-		}
-	);
+	});
 
 	return response.data.data.threads;
 };
@@ -52,10 +51,8 @@ export const getAllUserThreads = async (address: string): Promise<any> => {
 export const getAllUserSentThreads = async (address: string): Promise<any> => {
 	if (!address) return null;
 
-	const response = await axios.post(
-		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
-		{
-			query: `{
+	const response = await axios.post(graphEndpoint, {
+		query: `{
                 threads(first: ${50}, where: { _sender: "${address}" }) {
                     id
                     _receiver
@@ -65,16 +62,13 @@ export const getAllUserSentThreads = async (address: string): Promise<any> => {
 					encrypted
                 }
         }`,
-		}
-	);
+	});
 
 	return response.data.data.threads;
 };
 export const getThread = async (threadId: string): Promise<any> => {
-	const response = await axios.post(
-		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
-		{
-			query: `{
+	const response = await axios.post(graphEndpoint, {
+		query: `{
                 threads(where: { _thread_id: "${threadId}" }) {
                     id
                     _receiver
@@ -86,17 +80,14 @@ export const getThread = async (threadId: string): Promise<any> => {
 					encrypted
                 }
         }`,
-		}
-	);
+	});
 
 	return response.data.data.threads[0];
 };
 
 export const getAllThreadMessages = async (threadId: string): Promise<any> => {
-	const response = await axios.post(
-		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
-		{
-			query: `{
+	const response = await axios.post(graphEndpoint, {
+		query: `{
                 messages(first: ${100}, where: { _thread_id: ${threadId} }) {
                     id
                     _receiver
@@ -106,8 +97,7 @@ export const getAllThreadMessages = async (threadId: string): Promise<any> => {
 					_uri
                 }
         }`,
-		}
-	);
+	});
 
 	return response.data.data.messages;
 };
