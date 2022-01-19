@@ -213,10 +213,8 @@ export const threadReply = async (
 };
 
 export const getLatestMessage = async (threadId: string): Promise<any> => {
-	const response = await axios.post(
-		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
-		{
-			query: `{
+	const response = await axios.post(graphEndpoint, {
+		query: `{
 					messages(
 						where:{ _thread_id: ${threadId} },
 						orderBy:_timestamp,
@@ -230,8 +228,7 @@ export const getLatestMessage = async (threadId: string): Promise<any> => {
 					}
 
 		`,
-		}
-	);
+	});
 	return response.data.data.messages[0];
 };
 
