@@ -34,7 +34,9 @@ const ThreadComponent = ({
 		try {
 			setLoading(true);
 			const response = await getLatestMessage(email.thread_id);
-			setTimestamp(Number(response._timestamp) * 1000);
+			if (response) {
+				setTimestamp(Number(response._timestamp) * 1000);
+			}
 		} catch (error) {
 			console.error(error);
 			toast.error(error.message ?? "Something went wrong");
