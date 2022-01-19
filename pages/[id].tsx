@@ -57,7 +57,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 
 	const getSubject = async () => {
 		try {
-			if (!subjectURI) {
+			if (!subjectURI || !encrypted) {
 				return;
 			}
 			const ipfsMessage = await fetchFromIPFS(subjectURI);
@@ -84,6 +84,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 			console.log({
 				_sender_key,
 				_receiver_key,
+				thread,
 			});
 
 			const response = await getAllThreadMessages(threadId);
