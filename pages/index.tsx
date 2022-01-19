@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useChain } from "react-moralis";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
-import { Lock, Warning } from "../components/Icons";
+import ChainWrapper from "../components/ChainWrapper";
+import { Lock } from "../components/Icons";
 import InboxThreads from "../components/InboxThreads";
 import SentThreads from "../components/SentThreads";
+import useAppChain from "../hooks/useAppChain";
 import { useMoralisData } from "../hooks/useMoralisData";
 import { contract, getPublicEncryptionKey } from "../utils/crypto";
 
@@ -16,9 +17,8 @@ const Dashboard: React.FC = () => {
 	const [tab, setTab] = useState<"inbox" | "sent">("inbox");
 	const [onboarding, setOnboarding] = React.useState<boolean>(false);
 	const [onboarded, setOnboarded] = React.useState<boolean>(false);
-	const { chainId, switchNetwork } = useChain();
 
-	const requiredChain = chainId === "0x4"
+	const { requiredChain } = useAppChain();
 
 	const checkIfOnboarded = async (address: string) => {
 		try {
@@ -29,6 +29,7 @@ const Dashboard: React.FC = () => {
 			setOnboarding(true);
 
 			const response = await contract().checkUserRegistration();
+			console.log({ response });
 
 			setOnboarded(!!response);
 		} catch (error) {
@@ -53,40 +54,16 @@ const Dashboard: React.FC = () => {
 		}
 	};
 
-	const switchETHNetwork = () => {
-		process.env.NODE_ENV === "development"
-			? switchNetwork("0x4")
-			: switchNetwork("0x1");
-	};
-
 	useEffect(() => {
 		enableWeb3();
 		if (account) {
 			checkIfOnboarded(account);
 		}
-	}, [account, chainId]);
+	}, [account]);
 
 	return (
 		<div className="space-y-4 relative w-full">
-			{!requiredChain ? (
-				<div className="w-96 bg-primaryBackground rounded-md p-4 space-y-4 text-primaryText text-xl break-words m-auto flex justify-center flex-col items-center my-8">
-					<Warning />
-					<div className="text-center">
-						You are not connected to Mainnet
-					</div>
-					<div className="text-sm text-center text-secondaryText">
-						Your wallet is connected to a different network. Please
-						switch to the Ethereum Mainnet to continue.
-					</div>
-					<Button
-						onClick={switchETHNetwork}
-						fullWidth
-						className="flex justify-center"
-					>
-						Switch Network
-					</Button>
-				</div>
-			) : (
+			<ChainWrapper>
 				<>
 					{onboarding ? (
 						<div className="w-full flex justify-center my-12">
@@ -166,7 +143,7 @@ const Dashboard: React.FC = () => {
 						</>
 					)}
 				</>
-			)}
+			</ChainWrapper>
 		</div>
 	);
 };

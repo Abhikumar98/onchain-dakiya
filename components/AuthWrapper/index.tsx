@@ -35,7 +35,9 @@ const AuthWrapper: FC = ({ children }) => {
 				<Logo logoClassName="h-14 w-14" hideText />
 				<div className="mt-6 font-landing text-lg sm:text-3xl md:text-6xl font-bold flex flex-col items-center text-white">
 					<span>Connect with your frens</span>
-					<span>on-chain with Dakiya</span>
+					<span className="app-gradient text-clip">
+						on-chain with Dakiya
+					</span>
 				</div>
 				<div className="w-full md:w-96 mt-12">
 					<Button
