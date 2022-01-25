@@ -63,7 +63,7 @@ const Dashboard: React.FC = () => {
 			console.log("checking if onboarded", account);
 			checkIfOnboarded(account);
 		}
-	}, [account]);
+	}, [account, requiredChain]);
 
 	console.log({ account });
 
