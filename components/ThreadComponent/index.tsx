@@ -51,7 +51,8 @@ const ThreadComponent = ({
 	const receiver = receiverName ?? minimizeAddress(email.receiver);
 	const imageAvatar = receiverPin ? receiverAvatar : avatar;
 
-	console.log(email.encrypted);
+	console.log({ name, address, avatar });
+	console.log({ receiverName, receiverAvatar, address: email.receiver });
 
 	return (
 		<div

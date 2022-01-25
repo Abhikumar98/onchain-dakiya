@@ -29,7 +29,7 @@ const Dashboard: React.FC = () => {
 			setOnboarding(true);
 
 			const response = await contract().checkUserRegistration();
-			console.log({ response });
+			console.log("checkUserRegistration", response);
 
 			setOnboarded(!!response);
 		} catch (error) {
@@ -44,6 +44,7 @@ const Dashboard: React.FC = () => {
 		try {
 			setOnboarding(true);
 			const key = await getPublicEncryptionKey(account);
+			console.log({ key });
 			await contract().setPubEncKey(key);
 			setOnboarded(true);
 		} catch (error) {
@@ -57,6 +58,7 @@ const Dashboard: React.FC = () => {
 	useEffect(() => {
 		enableWeb3();
 		if (account) {
+			console.log("checking if onboarded", account);
 			checkIfOnboarded(account);
 		}
 	}, [account]);
