@@ -63,6 +63,8 @@ const Dashboard: React.FC = () => {
 		}
 	}, [account]);
 
+	console.log({ account });
+
 	return (
 		<div className="space-y-4 relative w-full">
 			<ChainWrapper>
