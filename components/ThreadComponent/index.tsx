@@ -72,7 +72,9 @@ const ThreadComponent = ({
 			<div className="">
 				<div className="flex flex-col  md:flex-row md:space-x-4 md:items-center">
 					<div className=" text-primaryText text-base sm:text-lg md:text-xl font-semibold">
-						{receiverPin ? receiver : sender}
+						{receiverPin
+							? receiverName ?? minimizeAddress(receiver)
+							: sender ?? minimizeAddress(sender)}
 					</div>
 					<div className="text-xs sm:text-sm md:text-base text-secondaryText space-x-4 flex items-center">
 						<div>

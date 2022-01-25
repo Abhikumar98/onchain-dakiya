@@ -30,7 +30,7 @@ const InboxThreads = () => {
 					const newEmail: EmailThread = {
 						thread_id: _thread_id.toString(),
 						receiver: _receiver.toString(),
-						sender: minimizeAddress(_sender.toString()),
+						sender: _sender.toString(),
 						timestamp: Number(_timestamp.toString()) * 1000,
 						encrypted: encrypted,
 					};
