@@ -22,12 +22,14 @@ const Dashboard: React.FC = () => {
 
 	const checkIfOnboarded = async (address: string) => {
 		try {
+			console.log("starting fetch");
 			if (!requiredChain) {
+				console.log("not on required chain");
 				return;
 			}
 
 			setOnboarding(true);
-
+			console.log("about to get");
 			const response = await contract().checkUserRegistration();
 			console.log("checkUserRegistration", response);
 
