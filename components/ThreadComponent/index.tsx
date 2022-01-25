@@ -19,9 +19,11 @@ const ThreadComponent = ({
 }) => {
 	const router = useRouter();
 	const { name, address, avatar } = useEnsAddress(email.sender);
-	const { name: receiverName, avatar: receiverAvatar } = useEnsAddress(
-		email.receiver
-	);
+	const {
+		name: receiverName,
+		avatar: receiverAvatar,
+		address: receiverAddress,
+	} = useEnsAddress(email.receiver);
 
 	const [loading, setLoading] = React.useState(false);
 	const [timestamp, setTimestamp] = React.useState<number | null>(null);
@@ -60,13 +62,13 @@ const ThreadComponent = ({
 			className="p-4 rounded-md bg-primaryBackground hover:bg-messageHover cursor-pointer transition-all ease-in-out my-4 flex"
 		>
 			<div className="mr-4">
-				{avatar || receiverAvatar ? (
+				{!!avatar || !!receiverAvatar ? (
 					<img
 						src={imageAvatar}
 						className="rounded-full h-12 w-12 m-auto"
 					/>
 				) : (
-					<Blockie address={address} />
+					<Blockie address={address ?? receiverAddress} />
 				)}
 			</div>
 			<div className="">
