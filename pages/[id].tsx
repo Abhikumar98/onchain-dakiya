@@ -32,6 +32,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 	const { account } = useMoralisData();
 
 	const threadId = query?.id?.toString();
+	const { chainId } = useAppChain();
 
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [encryptionKey, setEncryptionKey] = useState<string>("");
@@ -74,20 +75,14 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 
 	const getMessagesFromThread = async (threadId: string) => {
 		try {
-			const thread = await getThread(threadId);
+			const thread = await getThread(threadId, chainId);
 
 			const { _sender_key, _receiver_key, encrypted } = thread;
 
 			setSenderKey(_sender_key);
 			setReceiverKey(_receiver_key);
 
-			console.log({
-				_sender_key,
-				_receiver_key,
-				thread,
-			});
-
-			const response = await getAllThreadMessages(threadId);
+			const response = await getAllThreadMessages(threadId, chainId);
 			const cleanedMessages: Message[] = response
 				.map((message: any) => {
 					const newMessage: Message = {
@@ -113,7 +108,6 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 			}
 
 			if (!encryptionKey && encrypted) {
-				console.log("Permission to get public encryption key");
 				setEncrypted(true);
 				if (cleanedMessages[0].sender === account) {
 					const decryptedEncKey = await decryptEncrytionKey(
@@ -121,7 +115,6 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 					);
 					setEncryptionKey(decryptedEncKey);
 				} else {
-					console.log(cleanedMessages[0].receiver);
 					const decryptedEncKey = await decryptEncrytionKey(
 						_receiver_key
 					);

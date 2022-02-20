@@ -18,20 +18,17 @@ const Dashboard: React.FC = () => {
 	const [onboarding, setOnboarding] = React.useState<boolean>(false);
 	const [onboarded, setOnboarded] = React.useState<boolean>(false);
 
-	const { requiredChain } = useAppChain();
+	const { requiredChain, chainId } = useAppChain();
 
 	const checkIfOnboarded = async (address: string) => {
 		try {
-			console.log("starting fetch");
 			if (!requiredChain) {
-				console.log("not on required chain");
 				return;
 			}
 
 			setOnboarding(true);
-			console.log("about to get");
-			const response = await contract().checkUserRegistration();
-			console.log("checkUserRegistration", response);
+
+			const response = await contract(chainId).checkUserRegistration();
 
 			setOnboarded(!!response);
 		} catch (error) {
@@ -46,8 +43,8 @@ const Dashboard: React.FC = () => {
 		try {
 			setOnboarding(true);
 			const key = await getPublicEncryptionKey(account);
-			console.log({ key });
-			await contract().setPubEncKey(key);
+
+			await contract(chainId).setPubEncKey(key);
 			setOnboarded(true);
 		} catch (error) {
 			console.error(error);
@@ -60,12 +57,9 @@ const Dashboard: React.FC = () => {
 	useEffect(() => {
 		enableWeb3();
 		if (account) {
-			console.log("checking if onboarded", account);
 			checkIfOnboarded(account);
 		}
 	}, [account, requiredChain]);
-
-	console.log({ account });
 
 	return (
 		<div className="space-y-4 relative w-full">

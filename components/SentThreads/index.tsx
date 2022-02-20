@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { EmailThread } from "../../contracts";
+import useAppChain from "../../hooks/useAppChain";
 import { useMoralisData } from "../../hooks/useMoralisData";
 import { minimizeAddress } from "../../utils";
 import { getAllUserSentThreads } from "../../utils/queries";
@@ -11,11 +12,12 @@ const SentThreads = () => {
 	const { account } = useMoralisData();
 	const [emails, setEmails] = useState<EmailThread[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
+	const { chainId } = useAppChain();
 
 	const queryMails = async () => {
 		try {
 			setLoading(true);
-			const response = await getAllUserSentThreads(account);
+			const response = await getAllUserSentThreads(account, chainId);
 
 			const cleanedEmails = response
 				?.map((email: any) => {
@@ -30,7 +32,7 @@ const SentThreads = () => {
 					const newEmail: EmailThread = {
 						thread_id: _thread_id.toString(),
 						receiver: _receiver.toString(),
-						sender: minimizeAddress(_sender.toString()),
+						sender: _sender.toString(),
 						timestamp: Number(_timestamp.toString()) * 1000,
 						encrypted: encrypted,
 					};

@@ -27,7 +27,6 @@ const ThreadMessage = ({
 				? decryptCipherMessage(ipfsMessage, encKey)
 				: ipfsMessage;
 
-			console.log({ decryptedString });
 			const parsedData = JSON.parse(decryptedString);
 			setDecryptedMessage(parsedData.message);
 		} catch (error) {

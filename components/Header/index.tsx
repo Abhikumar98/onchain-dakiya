@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { useChain } from "react-moralis";
+import useAppChain from "../../hooks/useAppChain";
 import Account from "../Account";
 import Button from "../Button";
 import { Logo, Send } from "../Icons";
@@ -16,11 +17,7 @@ const Header = () => {
 	const [open, setOpen] = React.useState(false);
 
 	const { chainId, switchNetwork } = useChain();
-
-	const requiredChain =
-		process.env.NODE_ENV === "development"
-			? chainId === "0x4"
-			: chainId === "0x1";
+	const { requiredChain } = useAppChain();
 
 	const showComposeEmailSection = () => {
 		setOpen(true);

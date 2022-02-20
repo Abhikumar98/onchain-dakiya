@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { EmailThread } from "../../contracts";
+import useAppChain from "../../hooks/useAppChain";
 import { minimizeAddress } from "../../utils";
 import { getLatestMessage } from "../../utils/queries";
 import { useEnsAddress } from "../../utils/useEnsAddress";
@@ -18,12 +19,16 @@ const ThreadComponent = ({
 	receiverPin?: boolean;
 }) => {
 	const router = useRouter();
+
+	console.log({ a: email });
+
 	const { name, address, avatar } = useEnsAddress(email.sender);
 	const {
 		name: receiverName,
 		avatar: receiverAvatar,
 		address: receiverAddress,
 	} = useEnsAddress(email.receiver);
+	const { chainId } = useAppChain();
 
 	const [loading, setLoading] = React.useState(false);
 	const [timestamp, setTimestamp] = React.useState<number | null>(null);
@@ -35,7 +40,7 @@ const ThreadComponent = ({
 	const resolveIPFS = async () => {
 		try {
 			setLoading(true);
-			const response = await getLatestMessage(email.thread_id);
+			const response = await getLatestMessage(email.thread_id, chainId);
 			setTimestamp(Number(response._timestamp) * 1000);
 		} catch (error) {
 			console.error(error);
@@ -52,9 +57,6 @@ const ThreadComponent = ({
 	const sender = name ?? minimizeAddress(address ?? email.sender);
 	const receiver = receiverName ?? minimizeAddress(email.receiver);
 	const imageAvatar = receiverPin ? receiverAvatar : avatar;
-
-	console.log({ name, address, avatar });
-	console.log({ receiverName, receiverAvatar, address: email.receiver });
 
 	return (
 		<div

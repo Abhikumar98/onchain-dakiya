@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { toast } from "react-toastify";
+import useAppChain from "../../hooks/useAppChain";
 import { listenEvents } from "../../utils/crypto";
 import { threadReply } from "../../utils/queries";
 import Button from "../Button";
@@ -23,6 +24,7 @@ const ReplyBar = ({
 	const toastId = useRef(null);
 	const [message, setMessage] = React.useState<string>("");
 	const [loading, setLoading] = React.useState<boolean>(false);
+	const { chainId } = useAppChain();
 
 	const handleSend = async () => {
 		try {
@@ -34,13 +36,14 @@ const ReplyBar = ({
 				encryptionKey,
 				senderPubEncKey,
 				receiverPubEncKey,
-				encrypted
+				encrypted,
+				chainId
 			);
 			toastId.current = toast.loading("Sending message", {
 				position: "bottom-left",
 			});
 			setMessage("");
-			listenEvents().on("MessageSent", (...params) => {
+			listenEvents(chainId).on("MessageSent", (...params) => {
 				toast.update(toastId.current, {
 					type: toast.TYPE.SUCCESS,
 					render: "Email sent successfully",

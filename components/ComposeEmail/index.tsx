@@ -3,6 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { FC, Fragment, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import ReactTooltip from "react-tooltip";
+import useAppChain from "../../hooks/useAppChain";
 import { useMoralisData } from "../../hooks/useMoralisData";
 import { listenEvents } from "../../utils/crypto";
 import { saveMessageOnIPFS } from "../../utils/queries";
@@ -22,6 +23,7 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 	const [subject, setSubject] = useState("");
 	const [body, setBody] = useState("");
 	const [loading, setLoading] = useState<boolean>(false);
+	const { chainId } = useAppChain();
 
 	const handleClose = () => {
 		setTo("");
@@ -32,12 +34,12 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 	const handleSendEmail = async () => {
 		try {
 			setLoading(true);
-			await saveMessageOnIPFS(account, to, subject, body);
+			await saveMessageOnIPFS(account, to, subject, body, chainId);
 			handleClose();
 			toastId.current = toast.loading("Sending message", {
 				position: "bottom-left",
 			});
-			listenEvents().on("MessageSent", (...params) => {
+			listenEvents(chainId).on("MessageSent", (...params) => {
 				toast.update(toastId.current, {
 					type: toast.TYPE.SUCCESS,
 					render: "Email sent successfully",

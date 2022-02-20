@@ -2,17 +2,22 @@ import axios from "axios";
 // const { subtle, getRandomValues } = require("crypto").webcrypto;
 import { AES, enc } from "crypto-js";
 import { uuid } from "uuidv4";
-import { contract, encryptMessage, uploadToIPFS } from "./crypto";
+import {
+	contract,
+	encryptMessage,
+	getContractDetails,
+	uploadToIPFS,
+} from "./crypto";
 
 export const fetchMessages = async (
 	account: string,
-	limit: number
+	limit: number,
+	chainId: string
 	// page: number
 ): Promise<any> => {
-	const response = await axios.post(
-		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
-		{
-			query: `{
+	const { subgraphURL } = getContractDetails(chainId);
+	const response = await axios.post(subgraphURL, {
+		query: `{
                 messages(first: ${limit}) {
                     id
                     _receiver
@@ -21,20 +26,21 @@ export const fetchMessages = async (
 					_timestamp
                 }
         }`,
-		}
-	);
+	});
 
 	return response.data.data.messages;
 };
 
-export const getAllUserThreads = async (address: string): Promise<any> => {
+export const getAllUserThreads = async (
+	address: string,
+	chainId: string
+): Promise<any> => {
 	if (!address) return null;
 
-	const response = await axios.post(
-		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
-		{
-			query: `{
-                threads(first: ${50}, where: { _receiver: "${address}" }) {
+	const { subgraphURL } = getContractDetails(chainId);
+	const response = await axios.post(subgraphURL, {
+		query: `{
+                threads(where: { _receiver: "${address}" }) {
                     id
                     _receiver
 					_sender
@@ -43,38 +49,41 @@ export const getAllUserThreads = async (address: string): Promise<any> => {
 					encrypted
                 }
         }`,
-		}
-	);
+	});
 
 	return response.data.data.threads;
 };
 
-export const getAllUserSentThreads = async (address: string): Promise<any> => {
+export const getAllUserSentThreads = async (
+	address: string,
+	chainId: string
+): Promise<any> => {
 	if (!address) return null;
 
-	const response = await axios.post(
-		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
-		{
-			query: `{
-                threads(first: ${50}, where: { _sender: "${address}" }) {
-                    id
-                    _receiver
-					_sender
-					_thread_id
-					_timestamp
-					encrypted
-                }
+	const { subgraphURL } = getContractDetails(chainId);
+	console.log({ subgraphURL });
+	const response = await axios.post(subgraphURL, {
+		query: `{
+			threads(where: { _sender: "${address}" }) {
+				id
+				_receiver
+				_sender
+				_thread_id
+				_timestamp
+				encrypted
+			}
         }`,
-		}
-	);
+	});
 
 	return response.data.data.threads;
 };
-export const getThread = async (threadId: string): Promise<any> => {
-	const response = await axios.post(
-		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
-		{
-			query: `{
+export const getThread = async (
+	threadId: string,
+	chainId: string
+): Promise<any> => {
+	const { subgraphURL } = getContractDetails(chainId);
+	const response = await axios.post(subgraphURL, {
+		query: `{
                 threads(where: { _thread_id: "${threadId}" }) {
                     id
                     _receiver
@@ -86,17 +95,18 @@ export const getThread = async (threadId: string): Promise<any> => {
 					encrypted
                 }
         }`,
-		}
-	);
+	});
 
 	return response.data.data.threads[0];
 };
 
-export const getAllThreadMessages = async (threadId: string): Promise<any> => {
-	const response = await axios.post(
-		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
-		{
-			query: `{
+export const getAllThreadMessages = async (
+	threadId: string,
+	chainId: string
+): Promise<any> => {
+	const { subgraphURL } = getContractDetails(chainId);
+	const response = await axios.post(subgraphURL, {
+		query: `{
                 messages(first: ${100}, where: { _thread_id: ${threadId} }) {
                     id
                     _receiver
@@ -106,26 +116,10 @@ export const getAllThreadMessages = async (threadId: string): Promise<any> => {
 					_uri
                 }
         }`,
-		}
-	);
+	});
 
 	return response.data.data.messages;
 };
-
-async function generateAesKey() {
-	const key = await window.crypto.subtle.generateKey(
-		{
-			name: "AES-CBC",
-			length: 128,
-		},
-		true,
-		["encrypt", "decrypt"]
-	);
-
-	const iv = window.crypto.getRandomValues(new Uint8Array(16));
-
-	return { key, iv };
-}
 
 export const decryptCipherMessage = (
 	message: string,
@@ -138,11 +132,12 @@ export const saveMessageOnIPFS = async (
 	sender: string,
 	receiver: string,
 	subject: string,
-	message: string
+	message: string,
+	chainId: string
 ): Promise<any> => {
-	const [senderPubEncKey, receiverPubEncKey] = await contract().getPubEncKeys(
-		receiver
-	);
+	const [senderPubEncKey, receiverPubEncKey] = await contract(
+		chainId
+	).getPubEncKeys(receiver);
 
 	const dataToEncrypt = JSON.stringify({
 		message,
@@ -165,18 +160,7 @@ export const saveMessageOnIPFS = async (
 
 	const ipfsHash = await uploadToIPFS(encryptedData);
 
-	console.log({
-		ipfsHash,
-		receiver,
-		senderPubEncKey,
-		receiverPubEncKey,
-		senderPubKeyEnc,
-		receiverPubKeyEnc,
-		a: receiverPubEncKey,
-		encryptedData,
-	});
-
-	const response = await contract().sendMessage(
+	const response = await contract(chainId).sendMessage(
 		0,
 		ipfsHash,
 		receiver,
@@ -194,7 +178,8 @@ export const threadReply = async (
 	encryptionKey: string,
 	senderPubEncKey: string,
 	receiverPubEncKey: string,
-	encrypt: boolean
+	encrypt: boolean,
+	chainId: string
 ) => {
 	const dataToEncrypt = JSON.stringify({
 		message,
@@ -204,15 +189,7 @@ export const threadReply = async (
 		: dataToEncrypt;
 	const ipfsHash = await uploadToIPFS(encryptedData);
 
-	console.log({
-		threadId,
-		ipfsHash,
-		receiver,
-		senderPubEncKey,
-		receiverPubEncKey,
-	});
-
-	await contract().sendMessage(
+	const tx = await contract(chainId).sendMessage(
 		threadId,
 		ipfsHash,
 		receiver,
@@ -220,13 +197,17 @@ export const threadReply = async (
 		receiverPubEncKey,
 		encrypt
 	);
+
+	await tx.wait();
 };
 
-export const getLatestMessage = async (threadId: string): Promise<any> => {
-	const response = await axios.post(
-		"https://api.thegraph.com/subgraphs/name/anoushk1234/onchain-dakiya",
-		{
-			query: `{
+export const getLatestMessage = async (
+	threadId: string,
+	chainId: string
+): Promise<any> => {
+	const { subgraphURL } = getContractDetails(chainId);
+	const response = await axios.post(subgraphURL, {
+		query: `{
 					messages(
 						where:{ _thread_id: ${threadId} },
 						orderBy:_timestamp,
@@ -240,8 +221,7 @@ export const getLatestMessage = async (threadId: string): Promise<any> => {
 					}
 
 		`,
-		}
-	);
+	});
 	return response.data.data.messages[0];
 };
 

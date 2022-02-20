@@ -3,6 +3,7 @@ import { useChain } from "react-moralis";
 const useAppChain = (): {
 	readonly requiredChain: boolean;
 	readonly switchETHNetwork: () => void;
+	readonly chainId: string;
 } => {
 	const { chainId, switchNetwork } = useChain();
 
@@ -14,9 +15,11 @@ const useAppChain = (): {
 		rinkebyCheck ? switchNetwork("0x4") : switchNetwork("0x1");
 	};
 
-	const requiredChain = rinkebyCheck ? chainId === "0x4" : chainId === "0x1";
+	const requiredChain = rinkebyCheck
+		? chainId === "0x4"
+		: ["0x1", "0x89"].includes(chainId);
 
-	return { requiredChain, switchETHNetwork };
+	return { requiredChain: true, switchETHNetwork, chainId };
 };
 
 export default useAppChain;
