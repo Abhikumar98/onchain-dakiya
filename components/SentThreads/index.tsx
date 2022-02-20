@@ -11,6 +11,7 @@ import ThreadComponent from "../ThreadComponent";
 const SentThreads = () => {
 	const { account } = useMoralisData();
 	const [emails, setEmails] = useState<EmailThread[]>([]);
+	const [polygonEmails, setPolygonEmails] = useState<EmailThread[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	const { chainId } = useAppChain();
 
@@ -18,6 +19,10 @@ const SentThreads = () => {
 		try {
 			setLoading(true);
 			const response = await getAllUserSentThreads(account, chainId);
+			const polygonResponse = await getAllUserSentThreads(
+				account,
+				"0x89"
+			);
 
 			const cleanedEmails = response
 				?.map((email: any) => {
@@ -42,6 +47,31 @@ const SentThreads = () => {
 				?.sort((a, b) => b.timestamp - a.timestamp);
 
 			setEmails(cleanedEmails);
+
+			const polygonEmails = polygonResponse
+				?.map((email: any) => {
+					const {
+						_receiver,
+						_sender,
+						_thread_id,
+						_timestamp,
+						encrypted,
+					} = email;
+
+					const newEmail: EmailThread = {
+						thread_id: _thread_id.toString(),
+						receiver: _receiver.toString(),
+						sender: _sender.toString(),
+						timestamp: Number(_timestamp.toString()) * 1000,
+						encrypted: encrypted,
+						isPolygon: true,
+					};
+
+					return newEmail;
+				})
+				?.sort((a, b) => b.timestamp - a.timestamp);
+
+			setPolygonEmails(polygonEmails);
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -81,14 +111,16 @@ const SentThreads = () => {
 				</div>
 			) : (
 				<>
-					{!emails.length && <EmptyThreads />}
-					{emails.map((email) => (
-						<ThreadComponent
-							receiverPin
-							key={email.thread_id}
-							email={email}
-						/>
-					))}
+					{![...emails, ...polygonEmails].length && <EmptyThreads />}
+					{[...emails, ...polygonEmails]
+						.sort((a, b) => b.timestamp - a.timestamp)
+						.map((email) => (
+							<ThreadComponent
+								receiverPin
+								key={email.thread_id}
+								email={email}
+							/>
+						))}
 				</>
 			)}
 		</>

@@ -1,6 +1,8 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import { useChain } from "react-moralis";
 import { toast } from "react-toastify";
 import useAppChain from "../../hooks/useAppChain";
+import { useMoralisData } from "../../hooks/useMoralisData";
 import { listenEvents } from "../../utils/crypto";
 import { threadReply } from "../../utils/queries";
 import Button from "../Button";
@@ -13,6 +15,7 @@ const ReplyBar = ({
 	senderPubEncKey,
 	receiverPubEncKey,
 	encrypted,
+	network,
 }: {
 	receiver: string;
 	encryptionKey: string;
@@ -20,14 +23,22 @@ const ReplyBar = ({
 	senderPubEncKey: string;
 	receiverPubEncKey: string;
 	encrypted: boolean;
+	network: string;
 }) => {
 	const toastId = useRef(null);
 	const [message, setMessage] = React.useState<string>("");
 	const [loading, setLoading] = React.useState<boolean>(false);
-	const { chainId } = useAppChain();
+	const { chainId, switchNetwork } = useChain();
+	const { enableWeb3 } = useMoralisData();
+
+	console.log(chainId === network);
 
 	const handleSend = async () => {
 		try {
+			if (chainId !== network) {
+				await switchNetwork(network);
+			}
+
 			setLoading(true);
 			await threadReply(
 				receiver,
@@ -59,6 +70,11 @@ const ReplyBar = ({
 			setLoading(false);
 		}
 	};
+
+	useEffect(() => {
+		enableWeb3();
+	}, []);
+
 	return (
 		<div className=" sticky -bottom-4 -mb-4 py-4 shadow-sm flex items-start space-x-4 bg-secondaryBackground">
 			<textarea

@@ -1,15 +1,11 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useChain } from "react-moralis";
 import { toast } from "react-toastify";
-import Button from "../components/Button";
 import ChainWrapper from "../components/ChainWrapper";
-import { Warning } from "../components/Icons";
 import ReplyBar from "../components/ReplyBar";
 import SubjectHeader from "../components/SubjectHeader";
 import ThreadMessage from "../components/ThreadMessage";
 import { Message } from "../contracts";
-import useAppChain from "../hooks/useAppChain";
 import { useMoralisData } from "../hooks/useMoralisData";
 import { decryptMessage, fetchFromIPFS } from "../utils/crypto";
 import {
@@ -27,12 +23,13 @@ export interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({}) => {
-	const { query } = useRouter();
+	const {
+		query: { id },
+	} = useRouter();
+
+	const [network, threadId] = (id as string[]) ?? [];
 
 	const { account } = useMoralisData();
-
-	const threadId = query?.id?.toString();
-	const { chainId } = useAppChain();
 
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [encryptionKey, setEncryptionKey] = useState<string>("");
@@ -72,7 +69,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 			console.trace(error);
 		}
 	};
-
+	const chainId = network === "polygon" ? "0x89" : "0x1";
 	const getMessagesFromThread = async (threadId: string) => {
 		try {
 			const thread = await getThread(threadId, chainId);
@@ -169,6 +166,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 							/>
 						))}
 						<ReplyBar
+							network={chainId}
 							receiver={receiver}
 							encryptionKey={encryptionKey}
 							threadId={threadId}

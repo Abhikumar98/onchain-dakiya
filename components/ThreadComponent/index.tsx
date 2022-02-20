@@ -9,7 +9,7 @@ import { minimizeAddress } from "../../utils";
 import { getLatestMessage } from "../../utils/queries";
 import { useEnsAddress } from "../../utils/useEnsAddress";
 import Blockie from "../Blockie";
-import { Shield } from "../Icons";
+import { Eth, Polygon, Shield } from "../Icons";
 
 const ThreadComponent = ({
 	email,
@@ -34,15 +34,22 @@ const ThreadComponent = ({
 	const [timestamp, setTimestamp] = React.useState<number | null>(null);
 
 	const handleRoute = () => {
-		router.push(`/${email.thread_id}`);
+		router.push(
+			`/${email.isPolygon ? "polygon" : "ethereum"}/${email.thread_id}`
+		);
 	};
 
 	const resolveIPFS = async () => {
 		try {
 			setLoading(true);
-			const response = await getLatestMessage(email.thread_id, chainId);
+			console.log("-->", email.thread_id);
+			const response = await getLatestMessage(
+				email.thread_id,
+				email.isPolygon ? "0x89" : "0x1"
+			);
 			setTimestamp(Number(response._timestamp) * 1000);
 		} catch (error) {
+			console.error(email.thread_id);
 			console.error(error);
 			toast.error(error.message ?? "Something went wrong");
 		} finally {
@@ -86,6 +93,7 @@ const ThreadComponent = ({
 								moment(timestamp ?? email.timestamp).toDate()
 							)}
 						</div>
+						{email.isPolygon ? <Polygon /> : <Eth />}
 						{!email.encrypted && (
 							<div>
 								<Shield />

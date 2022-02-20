@@ -38,6 +38,7 @@ export const getAllUserThreads = async (
 	if (!address) return null;
 
 	const { subgraphURL } = getContractDetails(chainId);
+	console.log({ chainId, subgraphURL });
 	const response = await axios.post(subgraphURL, {
 		query: `{
                 threads(where: { _receiver: "${address}" }) {

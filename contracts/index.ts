@@ -4,6 +4,7 @@ export interface EmailThread {
 	readonly sender: string;
 	readonly timestamp: number;
 	readonly encrypted: boolean;
+	readonly isPolygon?: boolean;
 }
 
 export class CreateEmail {

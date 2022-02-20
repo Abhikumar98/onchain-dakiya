@@ -19,6 +19,7 @@ const InboxThreads = () => {
 		try {
 			setLoading(true);
 			const response = await getAllUserThreads(account, chainId);
+			const polygonResponse = await getAllUserThreads(account, "0x89");
 
 			const cleanedEmails = response
 				?.map((email: any) => {
@@ -42,6 +43,30 @@ const InboxThreads = () => {
 				})
 				?.sort((a, b) => b.timestamp - a.timestamp);
 
+			const cleanedPolygonEmails = polygonResponse
+				?.map((email: any) => {
+					const {
+						_receiver,
+						_sender,
+						_thread_id,
+						_timestamp,
+						encrypted,
+					} = email;
+
+					const newEmail: EmailThread = {
+						thread_id: _thread_id.toString(),
+						receiver: _receiver.toString(),
+						sender: _sender.toString(),
+						timestamp: Number(_timestamp.toString()) * 1000,
+						encrypted: encrypted,
+						isPolygon: true,
+					};
+
+					return newEmail;
+				})
+				?.sort((a, b) => b.timestamp - a.timestamp);
+
+			setPolygonEmails(cleanedPolygonEmails);
 			setEmails(cleanedEmails);
 		} catch (error) {
 			console.error(error);
@@ -82,10 +107,15 @@ const InboxThreads = () => {
 				</div>
 			) : (
 				<>
-					{!emails.length && <EmptyThreads />}
-					{emails.map((email) => (
-						<ThreadComponent key={email.thread_id} email={email} />
-					))}
+					{![...emails, ...polygonEmails].length && <EmptyThreads />}
+					{[...emails, ...polygonEmails]
+						.sort((a, b) => b.timestamp - a.timestamp)
+						.map((email) => (
+							<ThreadComponent
+								key={email.thread_id}
+								email={email}
+							/>
+						))}
 				</>
 			)}
 		</>
