@@ -3,7 +3,11 @@ import { useChain } from "react-moralis";
 import { toast } from "react-toastify";
 import useAppChain from "../../hooks/useAppChain";
 import { useMoralisData } from "../../hooks/useMoralisData";
-import { listenEvents } from "../../utils/crypto";
+import {
+	contract,
+	getPublicEncryptionKey,
+	listenEvents,
+} from "../../utils/crypto";
 import { threadReply } from "../../utils/queries";
 import Button from "../Button";
 import { Send } from "../Icons";
@@ -30,6 +34,7 @@ const ReplyBar = ({
 	const [loading, setLoading] = React.useState<boolean>(false);
 	const { chainId, switchNetwork } = useChain();
 	const { enableWeb3 } = useMoralisData();
+	const { account } = useMoralisData();
 
 	console.log(chainId === network);
 
@@ -37,6 +42,13 @@ const ReplyBar = ({
 		try {
 			if (chainId !== network) {
 				await switchNetwork(network);
+				const isOnboared = await contract(
+					chainId
+				).checkUserRegistration();
+				if (!isOnboared) {
+					const key = await getPublicEncryptionKey(account);
+					await contract(chainId).setPubEncKey(key);
+				}
 			}
 
 			setLoading(true);

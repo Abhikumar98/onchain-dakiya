@@ -82,10 +82,9 @@ const SentThreads = () => {
 	useEffect(() => {
 		queryMails();
 	}, []);
-
+	console.log("", [...emails, ...polygonEmails]);
 	return (
 		<>
-			<SearchBar />
 			{loading ? (
 				<div className="w-full flex justify-center my-12">
 					<svg

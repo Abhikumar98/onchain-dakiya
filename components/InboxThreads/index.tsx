@@ -81,7 +81,6 @@ const InboxThreads = () => {
 
 	return (
 		<>
-			<SearchBar />
 			{loading ? (
 				<div className="w-full flex justify-center my-12">
 					<svg
