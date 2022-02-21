@@ -18,7 +18,7 @@ const SentThreads = () => {
 	const queryMails = async () => {
 		try {
 			setLoading(true);
-			const response = await getAllUserSentThreads(account, chainId);
+			const response = await getAllUserSentThreads(account, "0x1");
 			const polygonResponse = await getAllUserSentThreads(
 				account,
 				"0x89"

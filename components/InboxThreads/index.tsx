@@ -18,7 +18,7 @@ const InboxThreads = () => {
 	const queryMails = async () => {
 		try {
 			setLoading(true);
-			const response = await getAllUserThreads(account, chainId);
+			const response = await getAllUserThreads(account, "0x1");
 			const polygonResponse = await getAllUserThreads(account, "0x89");
 
 			const cleanedEmails = response
