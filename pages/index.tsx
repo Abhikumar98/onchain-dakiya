@@ -56,10 +56,13 @@ const Dashboard: React.FC = () => {
 
 	useEffect(() => {
 		enableWeb3();
-		if (account) {
+	}, []);
+
+	useEffect(() => {
+		if (account && chainId) {
 			checkIfOnboarded(account);
 		}
-	}, [account, requiredChain]);
+	}, [account, requiredChain, chainId]);
 
 	return (
 		<div className="space-y-4 relative w-full">

@@ -19,7 +19,7 @@ const useAppChain = (): {
 		? chainId === "0x4"
 		: ["0x1", "0x89"].includes(chainId);
 
-	return { requiredChain: true, switchETHNetwork, chainId };
+	return { requiredChain, switchETHNetwork, chainId };
 };
 
 export default useAppChain;
