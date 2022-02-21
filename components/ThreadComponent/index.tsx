@@ -71,7 +71,7 @@ const ThreadComponent = ({
 			className="p-4 rounded-md bg-primaryBackground hover:bg-messageHover cursor-pointer transition-all ease-in-out my-4 flex"
 		>
 			<div className="mr-4">
-				{!!avatar || !!receiverAvatar ? (
+				{!!imageAvatar ? (
 					<img
 						src={imageAvatar}
 						className="rounded-full h-12 w-12 m-auto"
