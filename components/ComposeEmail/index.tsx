@@ -125,7 +125,7 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 										{chainId === "0x1" ? (
 											<Eth />
 										) : (
-											<Polygon />
+											chainId === "0x89" && <Polygon />
 										)}
 									</div>
 								</Dialog.Title>

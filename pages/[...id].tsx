@@ -156,6 +156,7 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 							encrypted={encrypted}
 							subject={subject}
 							sender={messages?.[0]?.sender ?? ""}
+							network={network}
 						/>
 						{messages.map((message) => (
 							<ThreadMessage

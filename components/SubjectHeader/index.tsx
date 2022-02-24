@@ -4,16 +4,18 @@ import React, { useEffect } from "react";
 import ReactTooltip from "react-tooltip";
 import { minimizeAddress } from "../../utils";
 import { useEnsAddress } from "../../utils/useEnsAddress";
-import { Shield } from "../Icons";
+import { Eth, Polygon, Shield } from "../Icons";
 
 const SubjectHeader = ({
 	subject,
 	sender,
 	encrypted,
+	network,
 }: {
 	subject: string;
 	sender: string;
 	encrypted: boolean;
+	network: string;
 }) => {
 	const { name, avatar } = useEnsAddress(sender);
 	const router = useRouter();
@@ -53,6 +55,11 @@ const SubjectHeader = ({
 							/>
 						)}
 						<div>{name ?? minimizeAddress(sender)}</div>
+						{network === "0x1" ? (
+							<Eth />
+						) : (
+							network === "0x89" && <Polygon />
+						)}
 					</div>
 				</div>
 			</div>
