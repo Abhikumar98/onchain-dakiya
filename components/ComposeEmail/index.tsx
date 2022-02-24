@@ -1,6 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Dialog, Transition } from "@headlessui/react";
 import { FC, Fragment, useEffect, useRef, useState } from "react";
+import { useChain } from "react-moralis";
 import { toast } from "react-toastify";
 import ReactTooltip from "react-tooltip";
 import useAppChain from "../../hooks/useAppChain";
@@ -8,7 +9,7 @@ import { useMoralisData } from "../../hooks/useMoralisData";
 import { listenEvents } from "../../utils/crypto";
 import { saveMessageOnIPFS } from "../../utils/queries";
 import Button from "../Button";
-import { Send, Shield } from "../Icons";
+import { Eth, Polygon, Send, Shield } from "../Icons";
 
 interface IComposeEmail {
 	readonly open: boolean;
@@ -24,6 +25,7 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 	const [body, setBody] = useState("");
 	const [loading, setLoading] = useState<boolean>(false);
 	const { chainId } = useAppChain();
+	const { switchNetwork } = useChain();
 
 	const handleClose = () => {
 		setTo("");
@@ -101,9 +103,31 @@ const ComposeEmail: FC<IComposeEmail> = ({ open, onClose }) => {
 							<div className="mb-4 sm:mt-5">
 								<Dialog.Title
 									as="h3"
-									className="text-xl font-medium text-primaryText"
+									className="text-xl font-medium text-primaryText flex items-center justify-between"
 								>
 									Compose mail
+									<div className="flex items-center space-x-4">
+										<div
+											className="text-sm p-2 rounded-lg hover:bg-white bg-none transition-all ease-in-out hover:text-black cursor-pointer border-white border"
+											onClick={() =>
+												switchNetwork(
+													chainId === "0x1"
+														? "0x89"
+														: "0x1"
+												)
+											}
+										>
+											Switch to{" "}
+											{chainId === "0x89"
+												? "ETH"
+												: "Polygon"}
+										</div>
+										{chainId === "0x1" ? (
+											<Eth />
+										) : (
+											<Polygon />
+										)}
+									</div>
 								</Dialog.Title>
 							</div>
 							<div className="mt-5 sm:mt-6 space-y-4 text-primaryText">

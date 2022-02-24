@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useChain } from "react-moralis";
 import { toast } from "react-toastify";
 import useAppChain from "../../hooks/useAppChain";
@@ -36,19 +36,19 @@ const ReplyBar = ({
 	const { enableWeb3 } = useMoralisData();
 	const { account } = useMoralisData();
 
-	console.log(chainId === network);
+	const checkIfOnboarded = async (chainId: string) => {
+		const isOnboared = await contract(chainId).checkUserRegistration();
+		if (!isOnboared) {
+			const key = await getPublicEncryptionKey(account);
+			await contract(chainId).setPubEncKey(key);
+		}
+	};
 
-	const handleSend = async () => {
+	const handleSend = async (currChainId: string) => {
 		try {
-			if (chainId !== network) {
+			if (currChainId !== network) {
 				await switchNetwork(network);
-				const isOnboared = await contract(
-					chainId
-				).checkUserRegistration();
-				if (!isOnboared) {
-					const key = await getPublicEncryptionKey(account);
-					await contract(chainId).setPubEncKey(key);
-				}
+				await checkIfOnboarded(network);
 			}
 
 			setLoading(true);
@@ -60,13 +60,13 @@ const ReplyBar = ({
 				senderPubEncKey,
 				receiverPubEncKey,
 				encrypted,
-				chainId
+				network
 			);
 			toastId.current = toast.loading("Sending message", {
 				position: "bottom-left",
 			});
 			setMessage("");
-			listenEvents(chainId).on("MessageSent", (...params) => {
+			listenEvents(network).on("MessageSent", (...params) => {
 				toast.update(toastId.current, {
 					type: toast.TYPE.SUCCESS,
 					render: "Email sent successfully",
@@ -98,7 +98,11 @@ const ReplyBar = ({
 				className="shadow-sm block w-full sm:text-sm border-transparent bg-messageHover rounded-md text-primaryText"
 				placeholder="Reply to thread"
 			/>
-			<Button loading={loading} onClick={handleSend} icon={<Send />} />
+			<Button
+				loading={loading}
+				onClick={() => handleSend(chainId)}
+				icon={<Send />}
+			/>
 		</div>
 	);
 };
