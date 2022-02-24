@@ -44,11 +44,14 @@ const ReplyBar = ({
 		}
 	};
 
-	const handleSend = async (currChainId: string) => {
+	const handleSend = async () => {
 		try {
-			if (currChainId !== network) {
+			if (chainId !== network) {
+				console.log("switching networks");
 				await switchNetwork(network);
+				console.log("switched networks");
 				await checkIfOnboarded(network);
+				console.log("checked On boarding");
 			}
 
 			setLoading(true);
@@ -98,11 +101,7 @@ const ReplyBar = ({
 				className="shadow-sm block w-full sm:text-sm border-transparent bg-messageHover rounded-md text-primaryText"
 				placeholder="Reply to thread"
 			/>
-			<Button
-				loading={loading}
-				onClick={() => handleSend(chainId)}
-				icon={<Send />}
-			/>
+			<Button loading={loading} onClick={handleSend} icon={<Send />} />
 		</div>
 	);
 };
