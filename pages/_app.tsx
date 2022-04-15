@@ -16,6 +16,8 @@ import AuthWrapper from "../components/AuthWrapper";
 const APP_ID = process.env.NEXT_PUBLIC_MORALIS_APPLICATION_ID;
 const SERVER_URL = process.env.NEXT_PUBLIC_MORALIS_SERVER_URL;
 
+// triggering CI
+
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
 	return (
 		<MoralisProvider appId={APP_ID} serverUrl={SERVER_URL}>
