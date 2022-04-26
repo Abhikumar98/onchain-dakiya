@@ -184,6 +184,8 @@ export const validateAndResolveAddress = async (
 const rinkebyCheck =
 	process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_RINKEBY;
 
+console.log(process.env.NEXT_PUBLIC_RINKEBY);
+
 const contractAddress = rinkebyCheck
 	? "0x355039B35222ea3E5eCbddfa0400BfC78E1ACEEf"
 	: "0x0761e0a5795be98fe806fa741a88f94ebec76c2b"; // eth mainnet
