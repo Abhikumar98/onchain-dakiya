@@ -1,3 +1,4 @@
+import axios from "axios";
 import { encrypt } from "@metamask/eth-sig-util";
 import { ethers } from "ethers";
 import { create } from "ipfs-http-client";
