@@ -163,6 +163,7 @@ export const saveMessageOnIPFS = async (
 		? await encryptMessage(encryptionKey, receiverPubEncKey)
 		: "";
 
+	console.log({ encryptedData });
 	const ipfsHash = await uploadToIPFS(encryptedData);
 
 	console.log({
@@ -202,6 +203,8 @@ export const threadReply = async (
 	const encryptedData = encrypt
 		? AES.encrypt(dataToEncrypt, encryptionKey).toString()
 		: dataToEncrypt;
+
+	console.log({ encryptedData });
 	const ipfsHash = await uploadToIPFS(encryptedData);
 
 	console.log({

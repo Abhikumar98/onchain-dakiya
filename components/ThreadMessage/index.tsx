@@ -22,7 +22,7 @@ const ThreadMessage = ({
 
 	const decryptMessage = async () => {
 		try {
-			const ipfsMessage = await fetchFromIPFS(message.uri);
+			const ipfsMessage = await fetchFromIPFS(message.uri, !encrypted);
 			const decryptedString = encrypted
 				? decryptCipherMessage(ipfsMessage, encKey)
 				: ipfsMessage;

@@ -106,7 +106,8 @@ const Profile: React.FC<ProfileProps> = ({}) => {
 			if (!encrypted) {
 				setEncrypted(false);
 				const ipfsMessage = await fetchFromIPFS(
-					cleanedMessages[0]?.uri
+					cleanedMessages[0]?.uri,
+					true
 				);
 				const parsedData = JSON.parse(ipfsMessage);
 				setSubject(parsedData.subject);

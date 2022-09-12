@@ -271,10 +271,11 @@ export const ipfs = create({
 });
 
 export const uploadToIPFS = async (message: string): Promise<string> => {
+	console.log({ message });
 	const resFile = await axios({
 		method: "post",
 		url: "https://api.pinata.cloud/pinning/pinJSONToIPFS",
-		data: message,
+		data: JSON.stringify({ message }),
 		headers: {
 			pinata_api_key: `${process.env.NEXT_PUBLIC_PINATA_API_KEY}`,
 			pinata_secret_api_key: `${process.env.NEXT_PUBLIC_PINATA_API_SECRET}`,
@@ -282,13 +283,26 @@ export const uploadToIPFS = async (message: string): Promise<string> => {
 		},
 	});
 
-	const ipfsHash = `ipfs://${resFile.data.IpfsHash}`;
-
-	return ipfsHash;
+	return resFile.data.IpfsHash;
 };
 
-export const fetchFromIPFS = async (uri: string): Promise<string> => {
-	const result = await fetch(`https://ipfs.infura.io/ipfs/${uri}`);
-	const text = await result.text();
-	return text;
+export const fetchFromIPFS = async (
+	uri: string,
+	message?: boolean
+): Promise<string> => {
+	console.log({ uri });
+	const result = await fetch(`https://ipfs.io/ipfs/${uri}`);
+	const jsonData = await result.text();
+
+	if (message) {
+		return jsonData;
+	}
+
+	let ipfsData = jsonData;
+
+	try {
+		ipfsData = JSON.parse(jsonData)?.message;
+	} catch (error) {}
+
+	return ipfsData;
 };
