@@ -270,10 +270,19 @@ export const ipfs = create({
 });
 
 export const uploadToIPFS = async (message: string): Promise<string> => {
-	const buffer = Buffer.from(message);
-	console.log({ buffer });
-	const result = await ipfs.add(buffer);
-	const ipfsHash = result.cid.toString();
+	const resFile = await axios({
+		method: "post",
+		url: "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+		data: json,
+		headers: {
+			pinata_api_key: `${process.env.NEXT_PUBLIC_PINATA_API_KEY}`,
+			pinata_secret_api_key: `${process.env.NEXT_PUBLIC_PINATA_API_SECRET}`,
+			"Content-Type": "application/json",
+		},
+	});
+
+	const ipfsHash = `ipfs://${resFile.data.IpfsHash}`;
+
 	return ipfsHash;
 };
 
