@@ -13,7 +13,7 @@ const useAppChain = (): {
 			: process.env.NEXT_PUBLIC_RINKEBY;
 
 	const switchETHNetwork = () => {
-		rinkebyCheck ? switchNetwork("0x4") : switchNetwork("0x1");
+		rinkebyCheck ? switchNetwork("0x4") : switchNetwork("0x89");
 	};
 
 	const requiredChain = rinkebyCheck
