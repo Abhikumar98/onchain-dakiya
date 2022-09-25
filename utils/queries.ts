@@ -52,7 +52,7 @@ export const getAllUserThreads = async (
         }`,
 	});
 
-	return response.data.data.threads;
+	return response.data.data?.threads ?? [];
 };
 
 export const getAllUserSentThreads = async (
@@ -76,7 +76,7 @@ export const getAllUserSentThreads = async (
         }`,
 	});
 
-	return response.data.data.threads;
+	return response.data.data?.threads ?? [];
 };
 export const getThread = async (
 	threadId: string,
@@ -98,7 +98,7 @@ export const getThread = async (
         }`,
 	});
 
-	return response.data.data.threads[0];
+	return response.data.data?.threads?.[0];
 };
 
 export const getAllThreadMessages = async (
